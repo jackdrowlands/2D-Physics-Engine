@@ -4,7 +4,9 @@ AABB::AABB() : size(0, 0) {}
 
 AABB::AABB(vector2d size, rigidBody body) : size(size), body(body) {}
 
-AABB::AABB(vector2d min, vector2d max) : size(max - min) {}
+AABB::AABB(vector2d min, vector2d max) : size(max - min) {
+  body.setPosition(min + size / 2);
+}
 
 AABB::~AABB() {}
 

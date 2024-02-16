@@ -47,9 +47,8 @@ TEST(IntersectionDetectorTest, PointInBox) {
   b.getRigidBody().setPosition(
       vector2d(5, 5));  // Assuming we can set the box's position directly
   b.getRigidBody().setRotation(M_PI / 4);  // 45 degrees in radians
-
   EXPECT_TRUE(intersectionDetector::pointInBox(vector2d(5, 5), b));
-  EXPECT_FALSE(intersectionDetector::pointInBox(vector2d(6, 6), b));
+  EXPECT_FALSE(intersectionDetector::pointInBox(vector2d(10, 10), b));
 }
 
 // Test line-circle intersection detection

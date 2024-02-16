@@ -29,4 +29,4 @@ std::vector<vector2d> box::getVertices() {
   return vertices;
 }
 
-rigidBody box::getRigidBody() { return body; }
+rigidBody& box::getRigidBody() { return body; }

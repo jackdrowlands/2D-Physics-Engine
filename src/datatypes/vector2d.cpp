@@ -111,12 +111,13 @@ vector2d vector2d::slerp(const vector2d& other, double t) const {
 }
 
 vector2d vector2d::rotate(double angleRad) const {
-  double rad = angleRad;
-  return vector2d(x * std::cos(rad) - y * std::sin(rad),
-                  x * std::sin(rad) + y * std::cos(rad));
+  double cosA = std::cos(angleRad);
+  double sinA = std::sin(angleRad);
+  return vector2d(x * cosA - y * sinA, x * sinA + y * cosA);
 }
 
 vector2d vector2d::rotate(double angleRad, vector2d origin) const {
+  // Translate to origin, rotate, then translate back
   return (*this - origin).rotate(angleRad) + origin;
 }
 

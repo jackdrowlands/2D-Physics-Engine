@@ -11,11 +11,12 @@ bool intersectionDetector::pointOnLine(vector2d point, line line) {
   double yInt = line.getFrom().y - slope * line.getFrom().x;
 
   // Check line equation
-  return point.y == slope * point.x + yInt;
+  return utils::compare(point.y, slope * point.x + yInt, 0.0001);
 }
 
 bool intersectionDetector::pointInCircle(vector2d point, circle circle) {
-  return point.distanceSquared(circle.getCentre()) < pow(circle.getRadius(), 2);
+  return point.distanceSquared(circle.getCentre()) <=
+         pow(circle.getRadius(), 2);
 }
 
 bool intersectionDetector::pointInAABB(vector2d point, AABB aabb) {
@@ -26,7 +27,7 @@ bool intersectionDetector::pointInAABB(vector2d point, AABB aabb) {
 bool intersectionDetector::pointInBox(vector2d point, box box) {
   // Translate point to box's local space
 
-  vector2d pointLocalBox = point.rotate(-box.getRigidBody().getRotation(),
+  vector2d pointLocalBox = point.rotate(box.getRigidBody().getRotation(),
                                         box.getRigidBody().getPosition());
 
   // Check if point is in box's local space

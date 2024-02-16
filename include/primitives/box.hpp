@@ -19,7 +19,8 @@ class box {
   vector2d getMin();
   vector2d getMax();
   std::vector<vector2d> getVertices();
-  rigidBody getRigidBody();
+  // need to return a reference to the rigidBody
+  rigidBody& getRigidBody();
 };
 
 #endif  // BOX_HPP

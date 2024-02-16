@@ -6,6 +6,7 @@
 #include "../../include/primitives/AABB.hpp"
 #include "../../include/primitives/box.hpp"
 #include "../../include/primitives/circle.hpp"
+#include "../../include/utils.hpp"
 
 class intersectionDetector {
  private:

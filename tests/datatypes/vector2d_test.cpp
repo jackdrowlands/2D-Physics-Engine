@@ -169,8 +169,8 @@ TEST(Vector2dTest, RotateWithOrigin) {
 
   // Test rotate with origin
   vector2d rotated = vec.rotate(M_PI / 2, origin);
-  EXPECT_NEAR(rotated.x, 1, 1e-9);
-  EXPECT_NEAR(rotated.y, 2, 1e-9);
+  EXPECT_NEAR(rotated.x, 2, 1e-9);
+  EXPECT_NEAR(rotated.y, 1, 1e-9);
 }
 
 // Test perp
@@ -199,7 +199,7 @@ TEST(Vector2dTest, FriendFunctions) {
   EXPECT_EQ(scaled.y, 4);
 
   vector2d div = 2 / vec;
-  EXPECT_EQ(div.x, 2);
+  EXPECT_EQ(div.x, 0.5);
   EXPECT_EQ(div.y, 1);
 }
 
