@@ -1,7 +1,7 @@
 #ifndef CIRCLE_HPP
 #define CIRCLE_HPP
 
-#include "include/rigidbody/rigidBody.hpp"
+#include "../../include/rigidbody/rigidBody.hpp"
 
 class circle {
  private:

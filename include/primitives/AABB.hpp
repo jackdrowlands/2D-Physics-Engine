@@ -1,8 +1,8 @@
 #ifndef AABB_HPP
 #define AABB_HPP
 
-#include "include/datatypes/vector2d.hpp"
-#include "include/rigidbody/rigidBody.hpp"
+#include "../../include/datatypes/vector2d.hpp"
+#include "../../include/rigidbody/rigidBody.hpp"
 
 // Axis Aligned Bounding Box
 class AABB {

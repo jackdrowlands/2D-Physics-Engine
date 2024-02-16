@@ -1,11 +1,11 @@
 #ifndef INTERSECTIONDETECTOR_HPP
 #define INTERSECTIONDETECTOR_HPP
 
-#include "include/datatypes/line.hpp"
-#include "include/datatypes/vector2d.hpp"
-#include "include/primitives/AABB.hpp"
-#include "include/primitives/box.hpp"
-#include "include/primitives/circle.hpp"
+#include "../../include/datatypes/line.hpp"
+#include "../../include/datatypes/vector2d.hpp"
+#include "../../include/primitives/AABB.hpp"
+#include "../../include/primitives/box.hpp"
+#include "../../include/primitives/circle.hpp"
 
 class intersectionDetector {
  private:

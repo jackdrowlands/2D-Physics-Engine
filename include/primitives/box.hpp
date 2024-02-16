@@ -3,8 +3,8 @@
 
 #include <vector>
 
-#include "include/datatypes/vector2d.hpp"
-#include "include/rigidbody/rigidBody.hpp"
+#include "../../include/datatypes/vector2d.hpp"
+#include "../../include/rigidbody/rigidBody.hpp"
 
 class box {
  private:

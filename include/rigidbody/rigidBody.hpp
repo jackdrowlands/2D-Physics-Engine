@@ -1,7 +1,7 @@
 #ifndef RIGIDBODY_HPP
 #define RIGIDBODY_HPP
 
-#include "include/datatypes/vector2d.hpp"
+#include "../../include/datatypes/vector2d.hpp"
 
 class rigidBody {
  private:

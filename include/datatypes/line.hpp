@@ -1,7 +1,7 @@
 #ifndef LINE_HPP
 #define LINE_HPP
 
-#include "include/datatypes/vector2d.hpp"
+#include "../../include/datatypes/vector2d.hpp"
 
 class line {
  private:
