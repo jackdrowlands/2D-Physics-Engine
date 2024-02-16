@@ -35,19 +35,21 @@ enable_testing()
 # Test files
 file(GLOB TEST_FILES
     tests/*.cpp
-    tests/datatypes/*.cpp
-    tests/primitives/*.cpp
-    tests/rigidbody/*.cpp
+     tests/datatypes/*.cpp
+     tests/primitives/*.cpp
+     tests/rigidbody/*.cpp
     src/datatypes/*.cpp
      src/primitives/*.cpp
      src/rigidbody/*.cpp
-     src/*.cpp
+     src/utils.cpp
 )
 
 # Test executable
-add_executable(2DPhysicsEngineTests ${TEST_FILES})
+add_executable(2DPhysicsEngineTest ${TEST_FILES})
 
-target_link_libraries(2DPhysicsEngineTests gtest_main)
+# Link Google Test
+target_link_libraries(2DPhysicsEngineTest gtest_main)
 
+# Add tests
 include(GoogleTest)
-gtest_discover_tests(2DPhysicsEngineTests)
+gtest_discover_tests(2DPhysicsEngineTest)
