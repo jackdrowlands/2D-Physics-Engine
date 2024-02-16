@@ -1,22 +1,22 @@
 #ifndef AABB_HPP
 #define AABB_HPP
 
-#include "include/datatypes/vector2f.hpp"
+#include "include/datatypes/vector2d.hpp"
 #include "include/rigidbody/rigidBody.hpp"
 
 // Axis Aligned Bounding Box
 class AABB {
  private:
-  vector2f size;
+  vector2d size;
   rigidBody body;
 
  public:
   AABB();
-  AABB(vector2f size, rigidBody body);
-  AABB(vector2f min, vector2f max);
+  AABB(vector2d size, rigidBody body);
+  AABB(vector2d min, vector2d max);
   ~AABB();
-  vector2f getMin();
-  vector2f getMax();
+  vector2d getMin();
+  vector2d getMax();
 };
 
 #endif  // AABB_HPP

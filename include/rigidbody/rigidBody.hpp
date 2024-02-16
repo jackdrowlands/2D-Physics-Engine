@@ -1,20 +1,20 @@
 #ifndef RIGIDBODY_HPP
 #define RIGIDBODY_HPP
 
-#include "include/datatypes/vector2f.hpp"
+#include "include/datatypes/vector2d.hpp"
 
 class rigidBody {
  private:
-  vector2f position;
-  float rotation;
+  vector2d position;
+  double rotation;
 
  public:
   rigidBody();
   ~rigidBody();
-  vector2f getPosition();
-  void setPosition(vector2f position);
-  float getRotation();
-  void setRotation(float rotation);
+  vector2d getPosition();
+  void setPosition(vector2d position);
+  double getRotation();
+  void setRotation(double rotation);
 };
 
 #endif  // RIGIDBODY_HPP

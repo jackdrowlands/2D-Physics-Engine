@@ -4,10 +4,10 @@ rigidBody::rigidBody() : rotation(0.0f) {}
 
 rigidBody::~rigidBody() {}
 
-vector2f rigidBody::getPosition() { return position; }
+vector2d rigidBody::getPosition() { return position; }
 
-void rigidBody::setPosition(vector2f position) { this->position = position; }
+void rigidBody::setPosition(vector2d position) { this->position = position; }
 
-float rigidBody::getRotation() { return rotation; }
+double rigidBody::getRotation() { return rotation; }
 
-void rigidBody::setRotation(float rotation) { this->rotation = rotation; }
+void rigidBody::setRotation(double rotation) { this->rotation = rotation; }

@@ -1,13 +1,26 @@
 #ifndef INTERSECTIONDETECTOR_HPP
 #define INTERSECTIONDETECTOR_HPP
 
-class intersectionDetector
-{
-private:
+#include "include/datatypes/line.hpp"
+#include "include/datatypes/vector2d.hpp"
+#include "include/primitives/AABB.hpp"
+#include "include/primitives/box.hpp"
+#include "include/primitives/circle.hpp"
+
+class intersectionDetector {
+ private:
   /* data */
-public:
+ public:
   intersectionDetector(/* args */);
   ~intersectionDetector();
+
+  static bool pointOnLine(vector2d point, line line);
+
+  static bool pointInCircle(vector2d point, circle circle);
+
+  static bool pointInAABB(vector2d point, AABB aabb);
+
+  static bool pointInBox(vector2d point, box box);
 };
 
 #endif  // INTERSECTIONDETECTOR_HPP

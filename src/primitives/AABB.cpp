@@ -2,12 +2,12 @@
 
 AABB::AABB() : size(0, 0) {}
 
-AABB::AABB(vector2f centre, vector2f size) : size(size) {}
+AABB::AABB(vector2d centre, vector2d size) : size(size) {}
 
-AABB::AABB(vector2f min, vector2f max) : size(max - min) {}
+AABB::AABB(vector2d min, vector2d max) : size(max - min) {}
 
 AABB::~AABB() {}
 
-vector2f AABB::getMin() { return body.getPosition() - size / 2; }
+vector2d AABB::getMin() { return body.getPosition() - size / 2; }
 
-vector2f AABB::getMax() { return body.getPosition() + size / 2; }
+vector2d AABB::getMax() { return body.getPosition() + size / 2; }

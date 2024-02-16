@@ -1,15 +1,19 @@
 #ifndef CIRCLE_HPP
 #define CIRCLE_HPP
 
+#include "include/rigidbody/rigidBody.hpp"
+
 class circle {
  private:
-  float radius;
+  double radius;
+  rigidBody body;
 
  public:
-  circle(float);
+  circle(double radius);
   ~circle();
 
-  float get_radius();
+  double getRadius();
+  vector2d getCentre();
 };
 
 #endif  // CIRCLE_HPP
