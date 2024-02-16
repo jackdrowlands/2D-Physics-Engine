@@ -21,6 +21,8 @@ class intersectionDetector {
   static bool pointInAABB(vector2d point, AABB aabb);
 
   static bool pointInBox(vector2d point, box box);
+
+  static bool lineCircle(line line, circle circle);
 };
 
 #endif  // INTERSECTIONDETECTOR_HPP
