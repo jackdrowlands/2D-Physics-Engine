@@ -11,12 +11,7 @@
 #include "../../include/utils.hpp"
 
 class intersectionDetector {
- private:
-  /* data */
  public:
-  intersectionDetector(/* args */);
-  ~intersectionDetector();
-
   static bool pointOnLine(vector2d point, line line);
 
   static bool pointInCircle(vector2d point, circle circle);
@@ -31,9 +26,19 @@ class intersectionDetector {
 
   static bool lineBox(line line, box box);
 
-  static bool rayCircle(ray ray, circle circle, raycastResult &result);
+  static bool raycast(ray ray, circle circle, raycastResult &result);
 
-  static bool rayCircle(ray ray, circle circle);
+  static bool raycast(ray ray, circle circle);
+
+  static bool raycast(ray ray, AABB aabb, raycastResult &result);
+
+  static bool raycast(ray ray, AABB aabb);
+
+  static bool raycast(ray ray, box box, raycastResult &result);
+
+  static bool raycast(ray ray, box box);
+
+  static bool circleCircle(circle circle1, circle circle2);
 };
 
 #endif  // INTERSECTIONDETECTOR_HPP

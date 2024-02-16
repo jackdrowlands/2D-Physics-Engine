@@ -30,3 +30,7 @@ std::vector<vector2d> box::getVertices() {
 }
 
 rigidBody& box::getRigidBody() { return body; }
+
+vector2d box::getSize() { return size; }
+
+vector2d box::getHalfSize() { return size / 2; }

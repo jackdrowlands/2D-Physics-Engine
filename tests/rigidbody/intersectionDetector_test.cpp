@@ -75,8 +75,9 @@ TEST(IntersectionDetectorTest, LineAABBIntersection) {
   EXPECT_FALSE(intersectionDetector::lineAABB(l3, aabb));
 }
 
-// Test ray-circle intersection detection
-TEST(IntersectionDetectorTest, RayCircleIntersection) {
+// Test raycast-circle intersection detection
+
+TEST(IntersectionDetectorTest, RaycastCircleIntersection) {
   circle c = makeCircle(0, 0, 5);
   ray r1 =
       ray(vector2d(-10, 0), vector2d(1, 0));  // Ray through circle's center
@@ -85,8 +86,95 @@ TEST(IntersectionDetectorTest, RayCircleIntersection) {
   ray r3 = ray(vector2d(-10, -10),
                vector2d(-1, -1).normalise());  // Ray outside circle
 
+  EXPECT_TRUE(intersectionDetector::raycast(r1, c));
+  EXPECT_TRUE(intersectionDetector::raycast(r2, c));
+  EXPECT_FALSE(intersectionDetector::raycast(r3, c));
+}
+
+// Test raycast-AABB intersection detection
+TEST(IntersectionDetectorTest, RaycastAABBIntersection) {
+  AABB aabb = makeAABB(-5, -5, 5, 5);
+  ray r1 =
+      ray(vector2d(0, 0), vector2d(1, 1).normalise());  // Ray through AABB's
+  // center
+  ray r2 = ray(vector2d(-10, -10),
+               vector2d(1, 1).normalise());  // Ray touching AABB's edge
+  ray r3 = ray(vector2d(-10, -10),
+               vector2d(-1, -1).normalise());  // Ray outside AABB
+
+  EXPECT_TRUE(intersectionDetector::raycast(r1, aabb));
+  EXPECT_TRUE(intersectionDetector::raycast(r2, aabb));
+  EXPECT_FALSE(intersectionDetector::raycast(r3, aabb));
+}
+
+// Test raycast-box intersection detection
+TEST(IntersectionDetectorTest, RaycastBoxIntersection) {
+  box b = box(vector2d(0, 0), vector2d(5, 5));
+  b.getRigidBody().setPosition(
+      vector2d(5, 5));  // Assuming we can set the box's position directly
+  b.getRigidBody().setRotation(M_PI / 4);  // 45 degrees in radians
+  ray r1 =
+      ray(vector2d(5, 5), vector2d(1, 1).normalise());  // Ray through box's
+  // center
+  ray r2 = ray(vector2d(-10, -10),
+               vector2d(1, 1).normalise());  // Ray touching box's edge
+  ray r3 =
+      ray(vector2d(-10, -10), vector2d(-1, -1).normalise());  // Ray outside box
+
+  EXPECT_TRUE(intersectionDetector::raycast(r1, b));
+  EXPECT_TRUE(intersectionDetector::raycast(r2, b));
+  EXPECT_FALSE(intersectionDetector::raycast(r3, b));
+}
+
+// Test raycast-circle intersection detection with result
+TEST(IntersectionDetectorTest, RaycastCircleIntersectionResult) {
+  circle c = makeCircle(0, 0, 5);
+  ray r1 =
+      ray(vector2d(-10, 0), vector2d(1, 0));  // Ray through circle's center
+  ray r2 = ray(vector2d(-10, -10),
+               vector2d(1, 1).normalise());  // Ray touching circle's edge
+  ray r3 = ray(vector2d(-10, -10),
+               vector2d(-1, -1).normalise());  // Ray outside circle
   raycastResult result;
-  EXPECT_TRUE(intersectionDetector::rayCircle(r1, c, result));
-  EXPECT_TRUE(intersectionDetector::rayCircle(r2, c, result));
-  EXPECT_FALSE(intersectionDetector::rayCircle(r3, c, result));
+
+  EXPECT_TRUE(intersectionDetector::raycast(r1, c, result));
+  EXPECT_TRUE(intersectionDetector::raycast(r2, c, result));
+  EXPECT_FALSE(intersectionDetector::raycast(r3, c, result));
+}
+
+// Test raycast-AABB intersection detection with result
+TEST(IntersectionDetectorTest, RaycastAABBIntersectionResult) {
+  AABB aabb = makeAABB(-5, -5, 5, 5);
+  ray r1 =
+      ray(vector2d(0, 0), vector2d(1, 1).normalise());  // Ray through AABB's
+  // center
+  ray r2 = ray(vector2d(-10, -10),
+               vector2d(1, 1).normalise());  // Ray touching AABB's edge
+  ray r3 = ray(vector2d(-10, -10),
+               vector2d(-1, -1).normalise());  // Ray outside AABB
+  raycastResult result;
+
+  EXPECT_TRUE(intersectionDetector::raycast(r1, aabb, result));
+  EXPECT_TRUE(intersectionDetector::raycast(r2, aabb, result));
+  EXPECT_FALSE(intersectionDetector::raycast(r3, aabb, result));
+}
+
+// Test raycast-box intersection detection with result
+TEST(IntersectionDetectorTest, RaycastBoxIntersectionResult) {
+  box b = box(vector2d(0, 0), vector2d(5, 5));
+  b.getRigidBody().setPosition(
+      vector2d(5, 5));  // Assuming we can set the box's position directly
+  b.getRigidBody().setRotation(M_PI / 4);  // 45 degrees in radians
+  ray r1 =
+      ray(vector2d(5, 5), vector2d(1, 1).normalise());  // Ray through box's
+  // center
+  ray r2 = ray(vector2d(-10, -10),
+               vector2d(1, 1).normalise());  // Ray touching box's edge
+  ray r3 =
+      ray(vector2d(-15, -15), vector2d(-1, -1).normalise());  // Ray outside box
+  raycastResult result;
+
+  EXPECT_TRUE(intersectionDetector::raycast(r1, b, result));
+  EXPECT_TRUE(intersectionDetector::raycast(r2, b, result));
+  EXPECT_FALSE(intersectionDetector::raycast(r3, b, result));
 }

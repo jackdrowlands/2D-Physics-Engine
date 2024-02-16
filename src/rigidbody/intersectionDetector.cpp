@@ -103,8 +103,8 @@ bool intersectionDetector::lineBox(line myLine, box box) {
   return lineAABB(localLine, localAABB);
 }
 
-bool intersectionDetector::rayCircle(ray ray, circle circle,
-                                     raycastResult &result) {
+bool intersectionDetector::raycast(ray ray, circle circle,
+                                   raycastResult &result) {
   raycastResult::reset(result);
 
   vector2d originToCircle = circle.getCentre() - ray.getOrigin();
@@ -132,7 +132,7 @@ bool intersectionDetector::rayCircle(ray ray, circle circle,
   return true;
 }
 
-bool intersectionDetector::rayCircle(ray ray, circle circle) {
+bool intersectionDetector::raycast(ray ray, circle circle) {
   vector2d originToCircle = circle.getCentre() - ray.getOrigin();
   double radiusSquared = pow(circle.getRadius(), 2);
   double originToCircleLengthSquared = originToCircle.dot(originToCircle);
@@ -154,4 +154,158 @@ bool intersectionDetector::rayCircle(ray ray, circle circle) {
   }
 
   return true;
+}
+
+bool intersectionDetector::raycast(ray ray, AABB aabb, raycastResult &result) {
+  raycastResult::reset(result);
+
+  // Calculate the unit vector of the line
+  vector2d unitVec = ray.getDirection();
+  // If the x or y component of the unit vector is not zero, take its reciprocal
+  unitVec.x = unitVec.x != 0 ? 1.0f / unitVec.x : 0.0f;
+  unitVec.y = unitVec.x != 0 ? 1.0f / unitVec.y : 0.0f;
+
+  // Calculate the t values for the intersection of the line and the AABB
+  vector2d t1 = (aabb.getMin() - ray.getOrigin()) * unitVec;
+  vector2d t2 = (aabb.getMax() - ray.getOrigin()) * unitVec;
+
+  // Find the minimum and maximum t values
+  double tMin = std::min(std::min(std::max(t1.x, t2.x), std::max(t1.y, t2.y)),
+                         std::max(std::max(t1.x, t2.x), std::min(t1.y, t2.y)));
+  double tMax = std::max(std::max(std::min(t1.x, t2.x), std::min(t1.y, t2.y)),
+                         std::min(std::min(t1.x, t2.x), std::max(t1.y, t2.y)));
+
+  // If the maximum t value is less than zero or the minimum t value is greater
+  // than the maximum t value, there is no intersection
+  if (tMax < 0 || tMin > tMax) {
+    return false;
+  }
+
+  // Calculate the t value for the intersection point
+  double t = (tMin < 0) ? tMax : tMin;
+  bool hit = t > 0;
+  if (!hit) {
+    return false;
+  }
+  vector2d point = ray.getOrigin() + ray.getDirection() * t;
+  result.init(point, (point - ray.getOrigin()).normalise(), t, true);
+
+  return true;
+}
+
+bool intersectionDetector::raycast(ray ray, AABB aabb) {
+  // Calculate the unit vector of the line
+  vector2d unitVec = ray.getDirection();
+  // If the x or y component of the unit vector is not zero, take its reciprocal
+  unitVec.x = unitVec.x != 0 ? 1.0f / unitVec.x : 0.0f;
+  unitVec.y = unitVec.x != 0 ? 1.0f / unitVec.y : 0.0f;
+
+  // Calculate the t values for the intersection of the line and the AABB
+  vector2d t1 = (aabb.getMin() - ray.getOrigin()) * unitVec;
+  vector2d t2 = (aabb.getMax() - ray.getOrigin()) * unitVec;
+
+  // Find the minimum and maximum t values
+  double tMin = std::min(std::min(std::max(t1.x, t2.x), std::max(t1.y, t2.y)),
+                         std::max(std::max(t1.x, t2.x), std::min(t1.y, t2.y)));
+  double tMax = std::max(std::max(std::min(t1.x, t2.x), std::min(t1.y, t2.y)),
+                         std::min(std::min(t1.x, t2.x), std::max(t1.y, t2.y)));
+
+  // If the maximum t value is less than zero or the minimum t value is greater
+  // than the maximum t value, there is no intersection
+  if (tMax < 0 || tMin > tMax) {
+    return false;
+  }
+
+  // Calculate the t value for the intersection point
+  double t = (tMin < 0) ? tMax : tMin;
+  bool hit = t > 0;
+  if (!hit) {
+    return false;
+  }
+  return true;
+}
+
+bool intersectionDetector::raycast(ray ray, box box, raycastResult &result) {
+  raycastResult::reset(result);
+
+  double theta = -box.getRigidBody().getRotation();
+  vector2d xAxis = vector2d(1, 0).rotate(theta);
+  vector2d yAxis = vector2d(0, 1).rotate(theta);
+  vector2d p = box.getRigidBody().getPosition() - ray.getOrigin();
+
+  vector2d f(xAxis.dot(ray.getDirection()), yAxis.dot(ray.getDirection()));
+  vector2d e(xAxis.dot(p), yAxis.dot(p));
+
+  std::vector<double> tVec(4, 0);
+  for (int i = 0; i < 2; i++) {
+    if (utils::compare(f[i], 0.0, 0.0001)) {
+      if (-e[i] - box.getHalfSize()[i] > 0 ||
+          -e[i] + box.getHalfSize()[i] < 0) {
+        return false;
+      }
+      f[i] = 0.00001;
+    }
+    tVec[i * 2] = (e[i] + box.getHalfSize()[i]) / f[i];
+    tVec[i * 2 + 1] = (e[i] - box.getHalfSize()[i]) / f[i];
+  }
+
+  double tMin = *std::min_element(tVec.begin(), tVec.end());
+  double tMax = *std::max_element(tVec.begin(), tVec.end());
+
+  if (tMax < 0 || tMin > tMax) {
+    return false;
+  }
+
+  // Calculate the t value for the intersection point
+  double t = (tMin < 0) ? tMax : tMin;
+  bool hit = t > 0;
+  if (!hit) {
+    return false;
+  }
+  vector2d point = ray.getOrigin() + ray.getDirection() * t;
+  result.init(point, (point - ray.getOrigin()).normalise(), t, true);
+  return true;
+}
+
+bool intersectionDetector::raycast(ray ray, box box) {
+  double theta = -box.getRigidBody().getRotation();
+  vector2d xAxis = vector2d(1, 0).rotate(theta);
+  vector2d yAxis = vector2d(0, 1).rotate(theta);
+  vector2d p = box.getRigidBody().getPosition() - ray.getOrigin();
+
+  vector2d f(xAxis.dot(ray.getDirection()), yAxis.dot(ray.getDirection()));
+  vector2d e(xAxis.dot(p), yAxis.dot(p));
+
+  std::vector<double> tVec(4, 0);
+  for (int i = 0; i < 2; i++) {
+    if (utils::compare(f[i], 0.0, 0.0001)) {
+      if (-e[i] - box.getHalfSize()[i] > 0 ||
+          -e[i] + box.getHalfSize()[i] < 0) {
+        return false;
+      }
+      f[i] = 0.00001;
+    }
+    tVec[i * 2] = (e[i] + box.getHalfSize()[i]) / f[i];
+    tVec[i * 2 + 1] = (e[i] - box.getHalfSize()[i]) / f[i];
+  }
+
+  double tMin = *std::min_element(tVec.begin(), tVec.end());
+  double tMax = *std::max_element(tVec.begin(), tVec.end());
+
+  if (tMax < 0 || tMin > tMax) {
+    return false;
+  }
+
+  // Calculate the t value for the intersection point
+  double t = (tMin < 0) ? tMax : tMin;
+  bool hit = t > 0;
+  if (!hit) {
+    return false;
+  }
+  return true;
+}
+
+bool intersectionDetector::circleCircle(circle circle1, circle circle2) {
+  return circle1.getCentre().distanceSquared(circle2.getCentre()) <=
+         pow(circle1.getRadius() + circle2.getRadius(), 2);
 }

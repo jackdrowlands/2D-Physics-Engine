@@ -21,6 +21,8 @@ class box {
   std::vector<vector2d> getVertices();
   // need to return a reference to the rigidBody
   rigidBody& getRigidBody();
+  vector2d getSize();
+  vector2d getHalfSize();
 };
 
 #endif  // BOX_HPP
