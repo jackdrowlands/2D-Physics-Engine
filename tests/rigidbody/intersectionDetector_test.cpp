@@ -62,3 +62,31 @@ TEST(IntersectionDetectorTest, LineCircleIntersection) {
   EXPECT_TRUE(intersectionDetector::lineCircle(l2, c));
   EXPECT_FALSE(intersectionDetector::lineCircle(l3, c));
 }
+
+// Test line-AABB intersection detection
+TEST(IntersectionDetectorTest, LineAABBIntersection) {
+  AABB aabb = makeAABB(-5, -5, 5, 5);
+  line l1 = makeLine(0, 0, 10, 10);      // Line through AABB's center
+  line l2 = makeLine(-10, -10, 0, 0);    // Line touching AABB's edge
+  line l3 = makeLine(-10, -10, -6, -5);  // Line outside AABB
+
+  EXPECT_TRUE(intersectionDetector::lineAABB(l1, aabb));
+  EXPECT_TRUE(intersectionDetector::lineAABB(l2, aabb));
+  EXPECT_FALSE(intersectionDetector::lineAABB(l3, aabb));
+}
+
+// Test ray-circle intersection detection
+TEST(IntersectionDetectorTest, RayCircleIntersection) {
+  circle c = makeCircle(0, 0, 5);
+  ray r1 =
+      ray(vector2d(-10, 0), vector2d(1, 0));  // Ray through circle's center
+  ray r2 = ray(vector2d(-10, -10),
+               vector2d(1, 1).normalise());  // Ray touching circle's edge
+  ray r3 = ray(vector2d(-10, -10),
+               vector2d(-1, -1).normalise());  // Ray outside circle
+
+  raycastResult result;
+  EXPECT_TRUE(intersectionDetector::rayCircle(r1, c, result));
+  EXPECT_TRUE(intersectionDetector::rayCircle(r2, c, result));
+  EXPECT_FALSE(intersectionDetector::rayCircle(r3, c, result));
+}

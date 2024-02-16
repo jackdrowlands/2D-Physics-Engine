@@ -26,7 +26,6 @@ TEST(AABBTest, ConstructorWithMinMax) {
   vector2d min(5, 10);
   vector2d max(15, 30);
   AABB box(min, max);
-
   EXPECT_EQ(box.getMin(), min);
   EXPECT_EQ(box.getMax(), max);
 }

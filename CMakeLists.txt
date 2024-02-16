@@ -9,6 +9,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 # Include directories for header files
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
+# Debugging flags
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Wextra -g")
+
 # Source files
 file(GLOB SOURCE_FILES
     src/*.cpp

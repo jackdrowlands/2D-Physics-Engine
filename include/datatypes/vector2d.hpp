@@ -18,10 +18,12 @@ class vector2d {
   vector2d operator+(const vector2d& other) const;
   vector2d operator-(const vector2d& other) const;
   vector2d operator*(const double& scalar) const;
+  vector2d operator*(const vector2d& other) const;
   vector2d operator/(const double& scalar) const;
   vector2d& operator+=(const vector2d& other);
   vector2d& operator-=(const vector2d& other);
   vector2d& operator*=(const double& scalar);
+  vector2d& operator*=(const vector2d& other);
   vector2d& operator/=(const double& scalar);
   bool operator==(const vector2d& other) const;
   bool operator!=(const vector2d& other) const;

@@ -6,6 +6,8 @@
 #include "../../include/primitives/AABB.hpp"
 #include "../../include/primitives/box.hpp"
 #include "../../include/primitives/circle.hpp"
+#include "../../include/primitives/ray.hpp"
+#include "../../include/primitives/raycastResult.hpp"
 #include "../../include/utils.hpp"
 
 class intersectionDetector {
@@ -24,6 +26,14 @@ class intersectionDetector {
   static bool pointInBox(vector2d point, box box);
 
   static bool lineCircle(line line, circle circle);
+
+  static bool lineAABB(line line, AABB aabb);
+
+  static bool lineBox(line line, box box);
+
+  static bool rayCircle(ray ray, circle circle, raycastResult &result);
+
+  static bool rayCircle(ray ray, circle circle);
 };
 
 #endif  // INTERSECTIONDETECTOR_HPP
