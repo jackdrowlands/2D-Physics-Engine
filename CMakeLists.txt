@@ -9,9 +9,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 # Include directories for header files
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
-# Automatically include source files
-file(GLOB_RECURSE SOURCE_FILES 
-     "${CMAKE_SOURCE_DIR}/src/*.cpp"
+# Source files
+file(GLOB SOURCE_FILES
+    src/*.cpp
+    src/datatypes/*.cpp
+    src/primitives/*.cpp
+     src/rigidbody/*.cpp
 )
 
 # Main executable
@@ -29,9 +32,12 @@ FetchContent_MakeAvailable(googletest)
 
 enable_testing()
 
-# Define TEST_FILES variable if you have specific test files to include
-file(GLOB_RECURSE TEST_FILES 
-     "${CMAKE_SOURCE_DIR}/tests/*.cpp"
+# Test files
+file(GLOB TEST_FILES
+    tests/*.cpp
+    tests/datatypes/*.cpp
+    tests/primitives/*.cpp
+    tests/rigidbody/*.cpp
 )
 
 # Test executable

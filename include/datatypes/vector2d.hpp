@@ -11,7 +11,8 @@ class vector2d {
   double y;
 
   // Constructor
-  vector2d(double x = 0.0f, double y = 0.0f);
+  vector2d();
+  vector2d(double x, double y);
 
   // Operator Overloads
   vector2d operator+(const vector2d& other) const;

@@ -1,6 +1,7 @@
 #include "../../include/datatypes/vector2d.hpp"
 
 // Constructor
+vector2d::vector2d() : x(0), y(0) {}
 vector2d::vector2d(double x, double y) : x(x), y(y) {}
 
 // Operator Overloads
