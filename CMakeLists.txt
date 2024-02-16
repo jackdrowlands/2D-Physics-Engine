@@ -38,6 +38,10 @@ file(GLOB TEST_FILES
     tests/datatypes/*.cpp
     tests/primitives/*.cpp
     tests/rigidbody/*.cpp
+    src/datatypes/*.cpp
+     src/primitives/*.cpp
+     src/rigidbody/*.cpp
+     src/*.cpp
 )
 
 # Test executable
