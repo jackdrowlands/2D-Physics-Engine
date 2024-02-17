@@ -1,9 +1,5 @@
 #include "../../include/rigidbody/intersectionDetector.hpp"
 
-intersectionDetector::intersectionDetector(/* args */) {}
-
-intersectionDetector::~intersectionDetector() {}
-
 bool intersectionDetector::pointOnLine(vector2d point, line line) {
   double dy = line.getTo().y - line.getFrom().y;
   double dx = line.getTo().x - line.getFrom().x;
@@ -308,4 +304,118 @@ bool intersectionDetector::raycast(ray ray, box box) {
 bool intersectionDetector::circleCircle(circle circle1, circle circle2) {
   return circle1.getCentre().distanceSquared(circle2.getCentre()) <=
          pow(circle1.getRadius() + circle2.getRadius(), 2);
+}
+
+bool intersectionDetector::circleAABB(circle circle, AABB aabb) {
+  vector2d closestPoint =
+      vector2d(std::max(aabb.getMin().x,
+                        std::min(circle.getCentre().x, aabb.getMax().x)),
+               std::max(aabb.getMin().y,
+                        std::min(circle.getCentre().y, aabb.getMax().y)));
+
+  return circle.getCentre().distanceSquared(closestPoint) <=
+         pow(circle.getRadius(), 2);
+}
+
+bool intersectionDetector::circleBox(circle myCircle, box box) {
+  // treat the box as an AABB
+  vector2d minVec(0, 0);
+  vector2d maxVec = box.getHalfSize() * 2;
+
+  vector2d localCircleCentre =
+      (myCircle.getCentre() - box.getRigidBody().getPosition())
+          .rotate(-box.getRigidBody().getRotation()) +
+      box.getHalfSize();
+
+  vector2d closestPoint =
+      vector2d(std::max(minVec.x, std::min(localCircleCentre.x, maxVec.x)),
+               std::max(minVec.y, std::min(localCircleCentre.y, maxVec.y)));
+
+  return localCircleCentre.distanceSquared(closestPoint) <=
+         pow(myCircle.getRadius(), 2);
+}
+
+bool intersectionDetector::AABBAAABB(AABB aabb1, AABB aabb2) {
+  std::vector<vector2d> axes = {vector2d(1, 0), vector2d(0, 1)};
+  for (int i = 0; i < 2; i++) {
+    if (!overlapOnAxis(aabb1, aabb2, axes[i])) {
+      return false;
+    }
+  }
+  return true;
+}
+
+bool intersectionDetector::AABBBox(AABB aabb, box box) {
+  std::vector<vector2d> axes = {vector2d(1, 0), vector2d(0, 1), vector2d(1, 0),
+                                vector2d(0, 1)};
+  axes[2].rotate(box.getRigidBody().getRotation());
+  axes[3].rotate(box.getRigidBody().getRotation());
+  for (int i = 0; i < axes.size(); i++) {
+    if (!overlapOnAxis(box, aabb, axes[i])) {
+      return false;
+    }
+  }
+  return true;
+}
+
+vector2d intersectionDetector::getInterval(AABB aabb, vector2d axis) {
+  vector2d min = aabb.getMin();
+  vector2d max = aabb.getMax();
+  std::vector<vector2d> vertices = {
+      vector2d(min.x, min.y), vector2d(min.x, max.y), vector2d(max.x, max.y),
+      vector2d(max.x, min.y)};
+
+  double minProj = axis.dot(vertices[0]);
+  double maxProj = minProj;
+
+  for (int i = 1; i < 4; i++) {
+    double proj = axis.dot(vertices[i]);
+    if (proj < minProj) {
+      minProj = proj;
+    } else if (proj > maxProj) {
+      maxProj = proj;
+    }
+  }
+
+  return vector2d(minProj, maxProj);
+}
+
+vector2d intersectionDetector::getInterval(box box, vector2d axis) {
+  std::vector<vector2d> vertices = box.getVertices();
+
+  double minProj = axis.dot(vertices[0]);
+  double maxProj = minProj;
+
+  for (int i = 1; i < 4; i++) {
+    double proj = axis.dot(vertices[i]);
+    if (proj < minProj) {
+      minProj = proj;
+    } else if (proj > maxProj) {
+      maxProj = proj;
+    }
+  }
+
+  return vector2d(minProj, maxProj);
+}
+
+bool intersectionDetector::overlapOnAxis(AABB aabb1, AABB aabb2,
+                                         vector2d axis) {
+  vector2d a = getInterval(aabb1, axis);
+  vector2d b = getInterval(aabb2, axis);
+
+  return (a.x <= b.y && a.y >= b.x);
+}
+
+bool intersectionDetector::overlapOnAxis(box box, AABB aabb2, vector2d axis) {
+  vector2d a = getInterval(box, axis);
+  vector2d b = getInterval(aabb2, axis);
+
+  return (a.x <= b.y && a.y >= b.x);
+}
+
+bool intersectionDetector::overlapOnAxis(box box1, box box2, vector2d axis) {
+  vector2d a = getInterval(box1, axis);
+  vector2d b = getInterval(box2, axis);
+
+  return (a.x <= b.y && a.y >= b.x);
 }

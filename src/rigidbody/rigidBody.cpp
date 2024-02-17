@@ -2,6 +2,9 @@
 
 rigidBody::rigidBody() : rotation(0.0f) {}
 
+rigidBody::rigidBody(vector2d position, double rotation)
+    : position(position), rotation(rotation) {}
+
 rigidBody::~rigidBody() {}
 
 vector2d rigidBody::getPosition() { return position; }

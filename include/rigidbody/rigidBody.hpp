@@ -10,6 +10,7 @@ class rigidBody {
 
  public:
   rigidBody();
+  rigidBody(vector2d position, double rotation);
   ~rigidBody();
   vector2d getPosition();
   void setPosition(vector2d position);

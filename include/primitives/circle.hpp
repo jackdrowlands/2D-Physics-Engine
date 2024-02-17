@@ -10,6 +10,7 @@ class circle {
 
  public:
   circle(double radius);
+  circle(double radius, vector2d centre);
   ~circle();
 
   double getRadius();

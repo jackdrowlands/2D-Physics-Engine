@@ -178,3 +178,40 @@ TEST(IntersectionDetectorTest, RaycastBoxIntersectionResult) {
   EXPECT_TRUE(intersectionDetector::raycast(r2, b, result));
   EXPECT_FALSE(intersectionDetector::raycast(r3, b, result));
 }
+
+// Test circle-circle intersection detection
+TEST(IntersectionDetectorTest, CircleCircleIntersection) {
+  circle c1 = makeCircle(0, 0, 5);
+  circle c2 = makeCircle(10, 0, 5);
+  circle c3 = makeCircle(10, 0, 3);
+
+  EXPECT_TRUE(intersectionDetector::circleCircle(c1, c2));
+  EXPECT_TRUE(intersectionDetector::circleCircle(c1, c3));
+  EXPECT_FALSE(intersectionDetector::circleCircle(c2, c3));
+}
+
+// Test circle-AABB intersection detection
+TEST(IntersectionDetectorTest, CircleAABBIntersection) {
+  circle c = makeCircle(0, 0, 5);
+  AABB aabb1 = makeAABB(-10, -10, 10, 10);
+  AABB aabb2 = makeAABB(10, 0, 15, 5);
+
+  EXPECT_TRUE(intersectionDetector::circleAABB(c, aabb1));
+  EXPECT_TRUE(intersectionDetector::circleAABB(c, aabb2));
+}
+
+// Test circle-box intersection detection
+TEST(IntersectionDetectorTest, CircleBoxIntersection) {
+  circle c = makeCircle(0, 0, 5);
+  box b1 = box(vector2d(0, 0), vector2d(5, 5));
+  b1.getRigidBody().setPosition(
+      vector2d(5, 5));  // Assuming we can set the box's position directly
+  b1.getRigidBody().setRotation(M_PI / 4);  // 45 degrees in radians
+  box b2 = box(vector2d(10, 0), vector2d(5, 5));
+  b2.getRigidBody().setPosition(
+      vector2d(5, 5));  // Assuming we can set the box's position directly
+  b2.getRigidBody().setRotation(M_PI / 4);  // 45 degrees in radians
+
+  EXPECT_TRUE(intersectionDetector::circleBox(c, b1));
+  EXPECT_TRUE(intersectionDetector::circleBox(c, b2));
+}
