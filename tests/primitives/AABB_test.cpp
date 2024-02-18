@@ -30,7 +30,7 @@ TEST(AABBTest, ConstructorWithMinMax) {
   EXPECT_EQ(box.getMax(), max);
 }
 
-// Test getMin and getMax for edge case (zero size)
+// Test getLocalMin and getMax for edge case (zero size)
 TEST(AABBTest, ZeroSize) {
   vector2d size(0, 0);
   rigidBody body;

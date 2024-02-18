@@ -13,3 +13,7 @@ AABB::~AABB() {}
 vector2d AABB::getMin() { return body.getPosition() - size / 2; }
 
 vector2d AABB::getMax() { return body.getPosition() + size / 2; }
+
+void AABB::setRigidBody(rigidBody body) { this->body = body; }
+
+void AABB::setSize(vector2d size) { this->size = size; }

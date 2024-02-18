@@ -12,3 +12,9 @@ double circle::getRadius() { return radius; }
 vector2d circle::getCentre() { return body.getPosition(); }
 
 void circle::setCentre(vector2d newCentre) { body.setPosition(newCentre); }
+
+void circle::setRadius(double newRadius) { radius = newRadius; }
+
+rigidBody& circle::getRigidBody() { return body; }
+
+void circle::setRigidBody(rigidBody body) { this->body = body; }

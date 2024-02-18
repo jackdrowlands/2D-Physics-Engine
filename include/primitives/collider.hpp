@@ -1,7 +1,7 @@
 #ifndef COLLIDER_HPP
 #define COLLIDER_HPP
 
-#include "include/datatypes/vector2d.hpp"
+#include "../datatypes/vector2d.hpp"
 
 class collider {
  private:

@@ -17,6 +17,8 @@ class AABB {
   ~AABB();
   vector2d getMin();
   vector2d getMax();
+  void setRigidBody(rigidBody body);
+  void setSize(vector2d size);
 };
 
 #endif  // AABB_HPP

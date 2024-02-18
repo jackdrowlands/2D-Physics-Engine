@@ -27,9 +27,10 @@ bool intersectionDetector::pointInBox(vector2d point, box box) {
                                         box.getRigidBody().getPosition());
 
   // Check if point is in box's local space
-  return pointLocalBox.x <= box.getMax().x &&
-         pointLocalBox.x >= box.getMin().x &&
-         pointLocalBox.y <= box.getMax().y && pointLocalBox.y >= box.getMin().y;
+  return pointLocalBox.x <= box.getLocalMax().x &&
+         pointLocalBox.x >= box.getLocalMin().x &&
+         pointLocalBox.y <= box.getLocalMax().y &&
+         pointLocalBox.y >= box.getLocalMin().y;
 }
 
 bool intersectionDetector::lineCircle(line line, circle circle) {
@@ -94,7 +95,7 @@ bool intersectionDetector::lineBox(line myLine, box box) {
   vector2d localTo = myLine.getTo().rotate(theta, centre);
 
   line localLine(localFrom, localTo);
-  AABB localAABB(box.getMin(), box.getMax());
+  AABB localAABB(box.getLocalMin(), box.getLocalMax());
 
   return lineAABB(localLine, localAABB);
 }
@@ -350,7 +351,7 @@ bool intersectionDetector::AABBBox(AABB aabb, box box) {
                                 vector2d(0, 1)};
   axes[2].rotate(box.getRigidBody().getRotation());
   axes[3].rotate(box.getRigidBody().getRotation());
-  for (int i = 0; i < axes.size(); i++) {
+  for (size_t i = 0; i < axes.size(); i++) {
     if (!overlapOnAxis(box, aabb, axes[i])) {
       return false;
     }

@@ -2,7 +2,10 @@
 
 // Constructor
 vector2d::vector2d() : x(0), y(0) {}
+
 vector2d::vector2d(double x, double y) : x(x), y(y) {}
+
+vector2d::vector2d(double scalar) : x(scalar), y(scalar) {}
 
 // Operator Overloads
 vector2d vector2d::operator+(const vector2d& other) const {

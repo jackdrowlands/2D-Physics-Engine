@@ -16,6 +16,9 @@ class circle {
   double getRadius();
   vector2d getCentre();
   void setCentre(vector2d newCentre);
+  void setRadius(double newRadius);
+  rigidBody& getRigidBody();
+  void setRigidBody(rigidBody body);
 };
 
 #endif  // CIRCLE_HPP
