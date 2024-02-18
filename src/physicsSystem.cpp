@@ -1,7 +1,7 @@
 #include "../include/physicsSystem.hpp"
 
 physicsSystem::physicsSystem(double fixedDeltaTime, vector2d gravity)
-    : fixedDeltaTime(fixedDeltaTime), gravityForce(gravity) {}
+    : gravityForce(gravity), fixedDeltaTime(fixedDeltaTime) {}
 
 physicsSystem::~physicsSystem() {
   for (auto body : rigidBodies) {
@@ -10,13 +10,12 @@ physicsSystem::~physicsSystem() {
 }
 
 void physicsSystem::update(double dt) {
-  // TODO
+  // TODO:
 }
 
 void physicsSystem::fixedUpdate() {
   registry.updateForces(fixedDeltaTime);
 
-  // TODO: Update rigid bodies
   for (auto& body : rigidBodies) {
     body->physicsUpdate(fixedDeltaTime);
   }

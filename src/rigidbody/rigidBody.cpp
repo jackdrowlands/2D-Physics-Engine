@@ -6,14 +6,20 @@ rigidBody::rigidBody()
       linearDamping(0.0f),
       fixedRotation(false) {}
 
-rigidBody::rigidBody(vector2d position, double rotation)
+rigidBody::rigidBody(vector2d position, double rotation) : position(position) {
+  this->rotation = rotation;
+}
+
+rigidBody::rigidBody(vector2d position, double rotation, double mass)
     : position(position),
       rotation(rotation),
       linearVelocity(0),
       angularVelocity(0),
       linearDamping(0),
       angularDamping(0),
-      fixedRotation(false){};
+      fixedRotation(false) {
+  this->setMass(mass);
+};
 
 rigidBody::rigidBody(vector2d position, double rotation,
                      vector2d linearVelocity, double angularVelocity,
@@ -71,11 +77,6 @@ void rigidBody::physicsUpdate(double dt) {
 
 void rigidBody::clearAccumulators() { forceAccum = vector2d(0, 0); }
 
-void rigidBody::syncCollisionTransforms() {
-  if (rawTransform != nullptr) {
-    rawTransform->setPosition(position);
-    rawTransform->setRotation(rotation);
-  }
-}
+void rigidBody::syncCollisionTransforms() {}
 
 void rigidBody::addForce(vector2d force) { forceAccum += force; }

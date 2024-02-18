@@ -5,7 +5,6 @@
 
 class rigidBody {
  private:
-  transform rawTransform;
   vector2d position;
   double rotation;
 
@@ -21,6 +20,7 @@ class rigidBody {
  public:
   rigidBody();
   rigidBody(vector2d position, double rotation);
+  rigidBody(vector2d position, double rotation, double mass);
   rigidBody(vector2d position, double rotation, vector2d linearVelocity,
             double angularVelocity, double linearDamping, double angularDamping,
             bool fixedRotation);

@@ -9,6 +9,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 # Include directories for header files
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
+include(FetchContent)
+
+FetchContent_Declare(
+  SFML
+  GIT_REPOSITORY https://github.com/SFML/SFML.git
+  GIT_TAG 2.6.x)
+FetchContent_MakeAvailable(SFML)
+
 # Debugging flags
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Wextra -g")
 
@@ -17,14 +25,17 @@ file(GLOB SOURCE_FILES
     src/*.cpp
     src/datatypes/*.cpp
     src/primitives/*.cpp
-     src/rigidbody/*.cpp
+    src/rigidbody/*.cpp
+    src/forces/*.cpp
 )
 
 # Main executable
 add_executable(2DPhysicsEngine ${SOURCE_FILES})
 
+# Link SFML to your project
+target_link_libraries(2DPhysicsEngine PRIVATE sfml-graphics)
+
 # Fetch Google Test
-include(FetchContent)
 FetchContent_Declare(
   googletest
   URL https://github.com/google/googletest/archive/refs/heads/master.zip
@@ -38,13 +49,15 @@ enable_testing()
 # Test files
 file(GLOB TEST_FILES
     tests/*.cpp
-     tests/datatypes/*.cpp
-     tests/primitives/*.cpp
-     tests/rigidbody/*.cpp
+    tests/datatypes/*.cpp
+    tests/primitives/*.cpp
+    tests/rigidbody/*.cpp
     src/datatypes/*.cpp
-     src/primitives/*.cpp
-     src/rigidbody/*.cpp
-     src/utils.cpp
+    src/primitives/*.cpp
+    src/rigidbody/*.cpp
+    src/utils.cpp
+    src/physicsSystem.cpp
+    src/forces/*.cpp
 )
 
 # Test executable

@@ -28,6 +28,6 @@ void forceRegistry::updateForces(double dt) {
 void forceRegistry::zeroForces() {
   for (auto& reg : registery) {
     // TODO: Add a clearAccumulators() method to rigidBody
-    // reg.getRigidBody()->clearAccumulators();
+    reg.getRigidBody()->clearAccumulators();
   }
 }
