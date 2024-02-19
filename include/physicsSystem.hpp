@@ -5,12 +5,18 @@
 
 #include "forces/forceRegistry.hpp"
 #include "forces/gravity.hpp"
+#include "rigidbody/collisions.hpp"
 
 class physicsSystem {
  private:
   forceRegistry registry;
-  std::vector<rigidBody*> rigidBodies;
   gravity gravityForce;
+
+  std::vector<rigidBody*> rigidBodies;
+  std::vector<rigidBody*> bodies1;
+  std::vector<rigidBody*> bodies2;
+  std::vector<collisionManifold> manifolds;
+
   double fixedDeltaTime;
 
  public:

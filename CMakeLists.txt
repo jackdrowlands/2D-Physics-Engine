@@ -27,6 +27,8 @@ file(GLOB SOURCE_FILES
     src/primitives/*.cpp
     src/rigidbody/*.cpp
     src/forces/*.cpp
+    src/render/*.cpp
+
 )
 
 # Main executable

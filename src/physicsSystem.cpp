@@ -14,8 +14,14 @@ void physicsSystem::update(double dt) {
 }
 
 void physicsSystem::fixedUpdate() {
+  // find collisions
+
+  // resolve collisions
+
+  // update forces
   registry.updateForces(fixedDeltaTime);
 
+  // update velocities
   for (auto& body : rigidBodies) {
     body->physicsUpdate(fixedDeltaTime);
   }

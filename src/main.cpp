@@ -1,51 +1,41 @@
 #include <iostream>
 
 #include "../include/physicsSystem.hpp"
-// SFML
-#include <SFML/Graphics.hpp>
+#include "../include/render/renderer.hpp"
 
 int main() {
-  // SFML window
-  sf::RenderWindow window(sf::VideoMode(1000, 1000), "Physics Engine");
+  // Renderer
+  renderer renderer(1000, 1000);
 
-  // Physics system
-  physicsSystem physics(1.0 / 60.0, vector2d(0, -9.81));
+  // Physics
+  physicsSystem physics(1.0 / 60.0, vector2d(0, 9.8));
 
   // Rigid body
-  rigidBody* body = new rigidBody({1.0, 1.0}, 0, 1.0);
-  body->setPosition(vector2d(400, 300));
+  rigidBody body(vector2d(500, 500), 0, 1);
 
   // Add rigid body to physics system
-  physics.addRigidBody(body);
+  physics.addRigidBody(&body);
 
   // Main loop
-  while (window.isOpen()) {
+  while (renderer.isOpen()) {
     sf::Event event;
-    while (window.pollEvent(event)) {
+    while (renderer.pollEvent(event)) {
       if (event.type == sf::Event::Closed) {
-        window.close();
+        renderer.close();
       }
     }
 
-    // Update physics
     physics.fixedUpdate();
 
-    // Clear window
-    window.clear(sf::Color::White);
+    renderer.clear();
 
     // Draw rigid body
-    sf::RectangleShape rectangle(sf::Vector2f(10, 10));
-    rectangle.setFillColor(sf::Color::Red);
-    // correct position
-    rectangle.setPosition(body->getPosition().x, body->getPosition().y);
-    std::cout << "Position: " << body->getPosition().x << ", "
-              << body->getPosition().y << std::endl;
-    std::cout << "Rectangle position: " << rectangle.getPosition().x << ", "
-              << rectangle.getPosition().y << std::endl;
-    window.draw(rectangle);
+    sf::CircleShape circle(10);
+    circle.setFillColor(sf::Color::Red);
+    circle.setPosition(body.getPosition().x, body.getPosition().y);
+    renderer.draw(circle);
 
-    // Display window
-    window.display();
+    renderer.display();
   }
 
   return 0;
