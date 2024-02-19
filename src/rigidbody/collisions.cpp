@@ -23,39 +23,7 @@ collisionManifold collisions::boxToBox(box& a, box& b) {
   if (!intersectionDetector::boxBox(a, b)) {
     return collisionManifold(vector2d(0, 0), 0, false);
   }
-  vector2d n = b.getRigidBody().getPosition() - a.getRigidBody().getPosition();
-  double aExtent = a.getHalfSize().x;
-  double bExtent = b.getHalfSize().x;
-
-  double aMax = aExtent;
-  double bMax = bExtent;
-  double aMin = -aExtent;
-  double bMin = -bExtent;
-
-  // Calculate the projection axis
-  vector2d axis = n.normalise();
-
-  // Project the polygons onto the axis
-  double aProjection = aExtent * abs(axis.dot(a.getRigidBody().getPosition()));
-  double bProjection = bExtent * abs(axis.dot(b.getRigidBody().getPosition()));
-
-  double distance = abs(n.dot(axis));
-  if (aProjection + bProjection < distance) {
-    return collisionManifold(vector2d(0, 0), 0, false);
-  }
-
-  double overlap = aProjection + bProjection - distance;
-  double depth = overlap * 0.5;
-  vector2d normal;
-  if (n.dot(axis) < 0) {
-    normal = -axis;
-  } else {
-    normal = axis;
-  }
-  vector2d contactPoint = a.getRigidBody().getPosition() + normal * aProjection;
-  collisionManifold res = collisionManifold(normal, depth, true);
-  res.addContactPoint(contactPoint);
-  return res;
+  // TODO: Implement box to box collision detection
 }
 
 collisionManifold* collisions::findCollisionFeatures(collider* c1,
