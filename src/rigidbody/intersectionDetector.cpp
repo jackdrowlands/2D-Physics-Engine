@@ -420,3 +420,16 @@ bool intersectionDetector::overlapOnAxis(box box1, box box2, vector2d axis) {
 
   return (a.x <= b.y && a.y >= b.x);
 }
+
+bool intersectionDetector::boxBox(box box1, box box2) {
+  std::vector<vector2d> axes = {vector2d(1, 0), vector2d(0, 1), vector2d(1, 0),
+                                vector2d(0, 1)};
+  axes[2].rotate(box1.getRigidBody().getRotation());
+  axes[3].rotate(box1.getRigidBody().getRotation());
+  for (size_t i = 0; i < axes.size(); i++) {
+    if (!overlapOnAxis(box1, box2, axes[i])) {
+      return false;
+    }
+  }
+  return true;
+}

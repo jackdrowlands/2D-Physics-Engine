@@ -57,6 +57,8 @@ class intersectionDetector {
   static bool overlapOnAxis(box box, AABB aabb, vector2d axis);
 
   static bool overlapOnAxis(box box1, box box2, vector2d axis);
+
+  static bool boxBox(box box1, box box2);
 };
 
 #endif  // INTERSECTIONDETECTOR_HPP

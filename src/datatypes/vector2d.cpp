@@ -144,6 +144,8 @@ vector2d operator*(double scalar, const vector2d& vec) { return vec * scalar; }
 
 vector2d operator/(double scalar, const vector2d& vec) { return vec / scalar; }
 
+vector2d operator-(const vector2d& vec) { return vector2d(-vec.x, -vec.y); }
+
 vector2d abs(const vector2d& vec) {
   return vector2d(std::fabs(vec.x), std::fabs(vec.y));
 }
@@ -178,4 +180,15 @@ vector2d fmin(const vector2d& vec, double val) {
 
 vector2d fmax(const vector2d& vec, double val) {
   return vector2d(std::fmax(vec.x, val), std::fmax(vec.y, val));
+}
+
+// matrix22d
+vector2d operator*(const matrix22d& mat, const vector2d& vec) {
+  return vector2d(mat[0][0] * vec.x + mat[1][0] * vec.y,
+                  mat[0][1] * vec.x + mat[1][1] * vec.y);
+}
+
+vector2d& operator*=(vector2d& vec, const matrix22d& mat) {
+  vec = mat * vec;
+  return vec;
 }

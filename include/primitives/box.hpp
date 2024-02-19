@@ -5,8 +5,9 @@
 
 #include "../../include/datatypes/vector2d.hpp"
 #include "../../include/rigidbody/rigidBody.hpp"
+#include "collider.hpp"
 
-class box {
+class box : public collider {
  private:
   vector2d size;
   rigidBody body;
@@ -26,6 +27,7 @@ class box {
   void setRigidBody(rigidBody body);
   void setRigidBody(rigidBody* body);
   void setSize(vector2d size);
+  std::string getType();
 };
 
 #endif  // BOX_HPP

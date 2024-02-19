@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "../include/physicsSystem.hpp"
+#include "../include/primitives/box.hpp"
 #include "../include/primitives/circle.hpp"
 #include "../include/render/renderer.hpp"
 
@@ -11,22 +12,25 @@ int main() {
   // Physics
   physicsSystem physics(1.0 / 60.0, vector2d(0, 9.8));
 
-  std::vector<circle*> bodies;
+  std::vector<box*> bodies;
   // Rigid body
-  circle* body1 = new circle(10, vector2d(500, 0));
-  circle* body2 = new circle(20, vector2d(500, 500));
-  circle* body3 = new circle(5, vector2d(500, 200));
+  box* body1 = new box(vector2d(10, 10));
+  box* body2 = new box(vector2d(10, 10));
+  box* body3 = new box(vector2d(20, 10));
 
   body1->getRigidBody().setMass(1);
-  body2->getRigidBody().setMass(1000);
-  body3->getRigidBody().setMass(2);
+  body1->getRigidBody().setPosition(vector2d(510, 0));
+  body2->getRigidBody().setMass(3);
+  body2->getRigidBody().setPosition(vector2d(500, 200));
+  body3->getRigidBody().setMass(100000);
+  body3->getRigidBody().setPosition(vector2d(500, 500));
   body1->getRigidBody().setCollider(body1);
   body2->getRigidBody().setCollider(body2);
   body3->getRigidBody().setCollider(body3);
 
   physics.addRigidBody(&body1->getRigidBody(), true);
-  physics.addRigidBody(&body2->getRigidBody(), false);
-  physics.addRigidBody(&body3->getRigidBody(), true);
+  physics.addRigidBody(&body2->getRigidBody(), true);
+  physics.addRigidBody(&body3->getRigidBody(), false);
 
   bodies.push_back(body1);
   bodies.push_back(body2);
@@ -45,13 +49,16 @@ int main() {
 
     renderer.clear();
 
-    // Draw all rigid bodies -> circles
+    // Draw all rigid bodies -> box
     for (auto& body : bodies) {
-      sf::CircleShape circle(body->getRadius());
-      circle.setPosition(body->getCentre().x - body->getRadius(),
-                         body->getCentre().y - body->getRadius());
-      circle.setFillColor(sf::Color::Red);
-      renderer.draw(circle);
+      sf::RectangleShape rectangle(
+          sf::Vector2f(body->getSize().x, body->getSize().y));
+      rectangle.setPosition(body->getRigidBody().getPosition().x,
+                            body->getRigidBody().getPosition().y);
+      rectangle.setOrigin(body->getSize().x / 2, body->getSize().y / 2);
+      rectangle.setRotation(body->getRigidBody().getRotation());
+      rectangle.setFillColor(sf::Color::Green);
+      renderer.draw(rectangle);
     }
 
     renderer.display();

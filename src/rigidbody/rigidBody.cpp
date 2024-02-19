@@ -96,3 +96,15 @@ vector2d rigidBody::getLinearVelocity() { return linearVelocity; }
 double rigidBody::getCor() { return cor; }
 
 void rigidBody::setCor(double cor) { this->cor = cor; }
+
+void rigidBody::setAngularVelocity(double angularVelocity) {
+  this->angularVelocity = angularVelocity;
+}
+
+double rigidBody::getAngularVelocity() { return angularVelocity; }
+
+void rigidBody::setCentreOfMass(vector2d centreOfMass) {
+  this->centreOfMass = centreOfMass;
+}
+
+vector2d rigidBody::getCentreOfMass() { return position; }

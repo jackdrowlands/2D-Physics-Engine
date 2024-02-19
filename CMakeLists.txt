@@ -18,7 +18,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(SFML)
 
 # Debugging flags
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Wextra -pg")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Wextra -g")
 
 # Source files
 file(GLOB SOURCE_FILES

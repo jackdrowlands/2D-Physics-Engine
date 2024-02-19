@@ -78,6 +78,21 @@ void physicsSystem::applyImpulse(rigidBody& a, rigidBody& b,
 
   float e = (std::min(a.getCor(), b.getCor()));
   double numerator = -(1.0 + e) * relVel.dot(m.getNormal());
+
+  // Calculate the radius from the center of mass to the contact point
+  vector2d radiusA = m.getContactPoint()[0] - a.getCentreOfMass();
+  vector2d radiusB = m.getContactPoint()[0] - b.getCentreOfMass();
+
+  // Calculate the rotational inertia
+  double invInertiaA = a.getInverseMass();
+  double invInertiaB = b.getInverseMass();
+
+  // Calculate the angular impulse denominator
+  double angularImpulseDenominator =
+      invMassSum +
+      radiusA.cross(relNormal) * radiusA.cross(relNormal) * invInertiaA +
+      radiusB.cross(relNormal) * radiusB.cross(relNormal) * invInertiaB;
+
   double j = numerator / invMassSum;
   if (m.getContactPoint().size() > 0 && j != 0.0) {
     j /= m.getContactPoint().size();
@@ -85,4 +100,10 @@ void physicsSystem::applyImpulse(rigidBody& a, rigidBody& b,
   vector2d impulse = relNormal * j;
   a.setLinearVelocity(a.getLinearVelocity() - impulse * invMassA);
   b.setLinearVelocity(b.getLinearVelocity() + impulse * invMassB);
+
+  // Apply the angular impulse
+  a.setAngularVelocity(a.getAngularVelocity() -
+                       radiusA.cross(impulse) * invInertiaA);
+  b.setAngularVelocity(b.getAngularVelocity() +
+                       radiusB.cross(impulse) * invInertiaB);
 }

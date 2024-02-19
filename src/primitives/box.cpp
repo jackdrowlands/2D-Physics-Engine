@@ -40,3 +40,5 @@ void box::setRigidBody(rigidBody body) { this->body = body; }
 void box::setRigidBody(rigidBody* body) { this->body = *body; }
 
 void box::setSize(vector2d size) { this->size = size; }
+
+std::string box::getType() { return "box"; }

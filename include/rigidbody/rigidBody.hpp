@@ -18,6 +18,7 @@ class rigidBody {
   double inverseMass;
   vector2d forceAccum;
   collider* col;
+  vector2d centreOfMass;
 
   double cor = 1.0f;
 
@@ -49,6 +50,10 @@ class rigidBody {
   vector2d getLinearVelocity();
   double getCor();
   void setCor(double cor);
+  void setAngularVelocity(double angularVelocity);
+  double getAngularVelocity();
+  void setCentreOfMass(vector2d centreOfMass);
+  vector2d getCentreOfMass();
 };
 
 #endif  // RIGIDBODY_HPP

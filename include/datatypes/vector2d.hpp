@@ -5,6 +5,8 @@
 #include <cmath>
 #include <iostream>
 
+#include "matrix22d.hpp"
+
 class vector2d {
  public:
   double x;
@@ -64,6 +66,10 @@ class vector2d {
   friend vector2d fmod(const vector2d& vec, double val);
   friend vector2d fmin(const vector2d& vec, double val);
   friend vector2d fmax(const vector2d& vec, double val);
+
+  // matrix22d friend functions
+  friend vector2d operator*(const matrix22d& mat, const vector2d& vec);
+  friend vector2d& operator*=(vector2d& vec, const matrix22d& mat);
 };
 
 #endif  // VECTOR2D_HPP
