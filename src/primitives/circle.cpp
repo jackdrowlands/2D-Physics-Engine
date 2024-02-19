@@ -18,3 +18,5 @@ void circle::setRadius(double newRadius) { radius = newRadius; }
 rigidBody& circle::getRigidBody() { return body; }
 
 void circle::setRigidBody(rigidBody body) { this->body = body; }
+
+std::string circle::getType() { return "circle"; }

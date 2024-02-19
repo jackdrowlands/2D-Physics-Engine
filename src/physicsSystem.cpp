@@ -14,12 +14,41 @@ void physicsSystem::update(double dt) {
 }
 
 void physicsSystem::fixedUpdate() {
-  // find collisions
+  bodies1.clear();
+  bodies2.clear();
+  manifolds.clear();
 
-  // resolve collisions
+  // find collisions
+  for (size_t i = 0; i < rigidBodies.size(); i++) {
+    for (size_t j = i + 1; j < rigidBodies.size(); j++) {
+      collisionManifold* res = nullptr;
+      if (rigidBodies[i]->getCollider() != nullptr &&
+          rigidBodies[j]->getCollider() != nullptr &&
+          !rigidBodies[i]->hasInfiniteMass() &&
+          !rigidBodies[j]->hasInfiniteMass()) {
+        res = collisions::findCollisionFeatures(rigidBodies[i]->getCollider(),
+                                                rigidBodies[j]->getCollider());
+      }
+
+      if (res != nullptr && res->getIsColliding()) {
+        bodies1.push_back(rigidBodies[i]);
+        bodies2.push_back(rigidBodies[j]);
+        manifolds.push_back(*res);
+      }
+    }
+  }
 
   // update forces
   registry.updateForces(fixedDeltaTime);
+
+  // resolve collisions via iterative impulses
+  for (size_t i = 0; i < impulseIterations; i++) {
+    for (size_t j = 0; j < manifolds.size(); j++) {
+      for (int k = 0; k < manifolds[j].getContactPoint().size(); k++) {
+        applyImpulse(*bodies1[j], *bodies2[j], manifolds[j]);
+      }
+    }
+  }
 
   // update velocities
   for (auto& body : rigidBodies) {
@@ -27,7 +56,33 @@ void physicsSystem::fixedUpdate() {
   }
 }
 
-void physicsSystem::addRigidBody(rigidBody* body) {
+void physicsSystem::addRigidBody(rigidBody* body, bool addGravity) {
   rigidBodies.push_back(body);
-  registry.add(body, &gravityForce);
+  if (addGravity) registry.add(body, &gravityForce);
+}
+
+void physicsSystem::applyImpulse(rigidBody& a, rigidBody& b,
+                                 collisionManifold& m) {
+  double invMassA = a.getInverseMass();
+  double invMassB = b.getInverseMass();
+  double invMassSum = invMassA + invMassB;
+  if (invMassSum == 0) {
+    return;
+  }
+
+  vector2d relVel = b.getLinearVelocity() - a.getLinearVelocity();
+  vector2d relNormal = m.getNormal().normalise();
+  if (relVel.dot(relNormal) > 0) {
+    return;
+  }
+
+  float e = (std::min(a.getCor(), b.getCor()));
+  double numerator = -(1.0 + e) * relVel.dot(m.getNormal());
+  double j = numerator / invMassSum;
+  if (m.getContactPoint().size() > 0 && j != 0.0) {
+    j /= m.getContactPoint().size();
+  }
+  vector2d impulse = relNormal * j;
+  a.setLinearVelocity(a.getLinearVelocity() - impulse * invMassA);
+  b.setLinearVelocity(b.getLinearVelocity() + impulse * invMassB);
 }

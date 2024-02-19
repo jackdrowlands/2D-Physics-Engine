@@ -2,6 +2,7 @@
 #define RIGIDBODY_HPP
 
 #include "../../include/datatypes/vector2d.hpp"
+#include "../include/primitives/collider.hpp"
 
 class rigidBody {
  private:
@@ -16,6 +17,9 @@ class rigidBody {
   double mass;
   double inverseMass;
   vector2d forceAccum;
+  collider* col;
+
+  double cor = 1.0f;
 
  public:
   rigidBody();
@@ -38,6 +42,13 @@ class rigidBody {
   void clearAccumulators();
   void syncCollisionTransforms();
   void addForce(vector2d force);
+  bool hasInfiniteMass();
+  void setCollider(collider* collider);
+  collider* getCollider();
+  void setLinearVelocity(vector2d linearVelocity);
+  vector2d getLinearVelocity();
+  double getCor();
+  void setCor(double cor);
 };
 
 #endif  // RIGIDBODY_HPP

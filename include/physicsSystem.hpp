@@ -18,13 +18,15 @@ class physicsSystem {
   std::vector<collisionManifold> manifolds;
 
   double fixedDeltaTime;
+  int impulseIterations = 6;
 
  public:
   physicsSystem(double fixedDeltaTime, vector2d gravity);
   ~physicsSystem();
   void update(double dt);
   void fixedUpdate();
-  void addRigidBody(rigidBody* body);
+  void addRigidBody(rigidBody* body, bool addGravity);
+  void applyImpulse(rigidBody& a, rigidBody& b, collisionManifold& m);
 };
 
 #endif  // PHYSICSSYSTEM_HPP

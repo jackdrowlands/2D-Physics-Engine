@@ -12,8 +12,7 @@ class collider {
  public:
   collider(/* args */);
   ~collider();
-  // TODO: Add a pure virtual function to get the inertia tensor
-  virtual void getInertiaTensor(double mass) = 0;
+  virtual std::string getType() = 0;
 };
 
 #endif  // COLLIDER_HPP

@@ -2,8 +2,9 @@
 #define CIRCLE_HPP
 
 #include "../../include/rigidbody/rigidBody.hpp"
+#include "collider.hpp"
 
-class circle {
+class circle : public collider {
  private:
   double radius;
   rigidBody body;
@@ -19,6 +20,7 @@ class circle {
   void setRadius(double newRadius);
   rigidBody& getRigidBody();
   void setRigidBody(rigidBody body);
+  std::string getType();
 };
 
 #endif  // CIRCLE_HPP

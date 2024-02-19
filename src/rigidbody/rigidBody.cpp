@@ -80,3 +80,19 @@ void rigidBody::clearAccumulators() { forceAccum = vector2d(0, 0); }
 void rigidBody::syncCollisionTransforms() {}
 
 void rigidBody::addForce(vector2d force) { forceAccum += force; }
+
+bool rigidBody::hasInfiniteMass() { return mass == 0; }
+
+void rigidBody::setCollider(collider* collider) { this->col = collider; }
+
+collider* rigidBody::getCollider() { return col; }
+
+void rigidBody::setLinearVelocity(vector2d linearVelocity) {
+  this->linearVelocity = linearVelocity;
+}
+
+vector2d rigidBody::getLinearVelocity() { return linearVelocity; }
+
+double rigidBody::getCor() { return cor; }
+
+void rigidBody::setCor(double cor) { this->cor = cor; }

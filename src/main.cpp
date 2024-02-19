@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "../include/physicsSystem.hpp"
+#include "../include/primitives/circle.hpp"
 #include "../include/render/renderer.hpp"
 
 int main() {
@@ -10,11 +11,21 @@ int main() {
   // Physics
   physicsSystem physics(1.0 / 60.0, vector2d(0, 9.8));
 
+  std::vector<circle*> bodies;
   // Rigid body
-  rigidBody body(vector2d(500, 500), 0, 1);
+  circle* body1 = new circle(10, vector2d(500, 0));
+  circle* body2 = new circle(20, vector2d(500, 500));
 
-  // Add rigid body to physics system
-  physics.addRigidBody(&body);
+  body1->getRigidBody().setMass(1);
+  body2->getRigidBody().setMass(1000);
+  body1->getRigidBody().setCollider(body1);
+  body2->getRigidBody().setCollider(body2);
+
+  physics.addRigidBody(&body1->getRigidBody(), true);
+  physics.addRigidBody(&body2->getRigidBody(), false);
+
+  bodies.push_back(body1);
+  bodies.push_back(body2);
 
   // Main loop
   while (renderer.isOpen()) {
@@ -29,11 +40,14 @@ int main() {
 
     renderer.clear();
 
-    // Draw rigid body
-    sf::CircleShape circle(10);
-    circle.setFillColor(sf::Color::Red);
-    circle.setPosition(body.getPosition().x, body.getPosition().y);
-    renderer.draw(circle);
+    // Draw all rigid bodies -> circles
+    for (auto& body : bodies) {
+      sf::CircleShape circle(body->getRadius());
+      circle.setPosition(body->getCentre().x - body->getRadius(),
+                         body->getCentre().y - body->getRadius());
+      circle.setFillColor(sf::Color::Red);
+      renderer.draw(circle);
+    }
 
     renderer.display();
   }
