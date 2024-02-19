@@ -15,17 +15,22 @@ int main() {
   // Rigid body
   circle* body1 = new circle(10, vector2d(500, 0));
   circle* body2 = new circle(20, vector2d(500, 500));
+  circle* body3 = new circle(5, vector2d(500, 200));
 
   body1->getRigidBody().setMass(1);
   body2->getRigidBody().setMass(1000);
+  body3->getRigidBody().setMass(2);
   body1->getRigidBody().setCollider(body1);
   body2->getRigidBody().setCollider(body2);
+  body3->getRigidBody().setCollider(body3);
 
   physics.addRigidBody(&body1->getRigidBody(), true);
   physics.addRigidBody(&body2->getRigidBody(), false);
+  physics.addRigidBody(&body3->getRigidBody(), true);
 
   bodies.push_back(body1);
   bodies.push_back(body2);
+  bodies.push_back(body3);
 
   // Main loop
   while (renderer.isOpen()) {
