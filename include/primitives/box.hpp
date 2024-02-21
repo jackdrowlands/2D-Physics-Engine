@@ -5,6 +5,7 @@
 
 #include "../../include/datatypes/vector2d.hpp"
 #include "../../include/rigidbody/rigidBody.hpp"
+#include "../render/renderer.hpp"
 #include "collider.hpp"
 
 class box : public collider {

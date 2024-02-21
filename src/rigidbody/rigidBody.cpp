@@ -70,6 +70,7 @@ void rigidBody::physicsUpdate(double dt) {
   vector2d acceleration = forceAccum * inverseMass;
   linearVelocity += acceleration * dt;
   position += linearVelocity * dt;
+  rotation += angularVelocity * dt;
 
   syncCollisionTransforms();
   clearAccumulators();

@@ -2,6 +2,7 @@
 #define COLLIDER_HPP
 
 #include "../datatypes/vector2d.hpp"
+#include "../render/renderer.hpp"
 
 class collider {
  private:

@@ -84,8 +84,8 @@ void physicsSystem::applyImpulse(rigidBody& a, rigidBody& b,
   vector2d radiusB = m.getContactPoint()[0] - b.getCentreOfMass();
 
   // Calculate the rotational inertia
-  double invInertiaA = a.getInverseMass();
-  double invInertiaB = b.getInverseMass();
+  double invInertiaA = 0.00000001;
+  double invInertiaB = 0.00000001;
 
   // Calculate the angular impulse denominator
   double angularImpulseDenominator =

@@ -2,6 +2,7 @@
 #define CIRCLE_HPP
 
 #include "../../include/rigidbody/rigidBody.hpp"
+#include "../render/renderer.hpp"
 #include "collider.hpp"
 
 class circle : public collider {

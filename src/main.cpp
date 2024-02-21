@@ -14,27 +14,46 @@ int main() {
 
   std::vector<box*> bodies;
   // Rigid body
-  box* body1 = new box(vector2d(10, 10));
-  box* body2 = new box(vector2d(10, 10));
-  box* body3 = new box(vector2d(20, 10));
+  box* body1 = new box(vector2d(10, 900));
+  box* body2 = new box(vector2d(10, 900));
+  box* body3 = new box(vector2d(800, 10));
 
-  body1->getRigidBody().setMass(1);
-  body1->getRigidBody().setPosition(vector2d(510, 0));
-  body2->getRigidBody().setMass(3);
-  body2->getRigidBody().setPosition(vector2d(500, 200));
+  body1->getRigidBody().setMass(100);
+  body1->getRigidBody().setPosition(vector2d(900, 500));
+  body2->getRigidBody().setMass(100);
+  body2->getRigidBody().setPosition(vector2d(100, 500));
   body3->getRigidBody().setMass(100000);
   body3->getRigidBody().setPosition(vector2d(500, 500));
+  body3->getRigidBody().setRotation(0.05);
   body1->getRigidBody().setCollider(body1);
   body2->getRigidBody().setCollider(body2);
   body3->getRigidBody().setCollider(body3);
 
-  physics.addRigidBody(&body1->getRigidBody(), true);
-  physics.addRigidBody(&body2->getRigidBody(), true);
+  physics.addRigidBody(&body1->getRigidBody(), false);
+  physics.addRigidBody(&body2->getRigidBody(), false);
   physics.addRigidBody(&body3->getRigidBody(), false);
 
   bodies.push_back(body1);
   bodies.push_back(body2);
   bodies.push_back(body3);
+
+  std::vector<circle*> circles;
+  // Rigid body
+  circle* circle1 = new circle(10);
+  circle* circle2 = new circle(10);
+
+  circle1->getRigidBody().setMass(1);
+  circle1->getRigidBody().setPosition(vector2d(510, 0));
+  circle2->getRigidBody().setMass(1);
+  circle2->getRigidBody().setPosition(vector2d(500, 200));
+  circle1->getRigidBody().setCollider(circle1);
+  circle2->getRigidBody().setCollider(circle2);
+
+  physics.addRigidBody(&circle1->getRigidBody(), true);
+  physics.addRigidBody(&circle2->getRigidBody(), true);
+
+  circles.push_back(circle1);
+  circles.push_back(circle2);
 
   // Main loop
   while (renderer.isOpen()) {
@@ -56,9 +75,22 @@ int main() {
       rectangle.setPosition(body->getRigidBody().getPosition().x,
                             body->getRigidBody().getPosition().y);
       rectangle.setOrigin(body->getSize().x / 2, body->getSize().y / 2);
-      rectangle.setRotation(body->getRigidBody().getRotation());
-      rectangle.setFillColor(sf::Color::Green);
+      // radians to degrees
+      rectangle.setRotation(body->getRigidBody().getRotation() * 180 / M_PI);
+      // red
+      rectangle.setFillColor(sf::Color(255, 0, 0));
       renderer.draw(rectangle);
+    }
+
+    // Draw all rigid bodies -> circle
+    for (auto& body : circles) {
+      sf::CircleShape circle(body->getRadius());
+      circle.setPosition(body->getRigidBody().getPosition().x,
+                         body->getRigidBody().getPosition().y);
+      circle.setOrigin(body->getRadius(), body->getRadius());
+      // green
+      circle.setFillColor(sf::Color(0, 255, 0));
+      renderer.draw(circle);
     }
 
     renderer.display();

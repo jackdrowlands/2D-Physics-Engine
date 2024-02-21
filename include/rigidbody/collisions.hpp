@@ -17,6 +17,8 @@ class collisions {
  public:
   static collisionManifold circleToCircle(circle& a, circle& b);
 
+  static collisionManifold circleToBox(circle& a, box& b);
+
   static collisionManifold boxToBox(box& a, box& b);
 
   static collisionManifold* findCollisionFeatures(collider* c1, collider* c2);
