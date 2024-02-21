@@ -19,9 +19,9 @@ int main() {
   box* body3 = new box(vector2d(800, 10));
 
   body1->getRigidBody().setMass(100);
-  body1->getRigidBody().setPosition(vector2d(900, 500));
+  body1->getRigidBody().setPosition(vector2d(950, 500));
   body2->getRigidBody().setMass(100);
-  body2->getRigidBody().setPosition(vector2d(100, 500));
+  body2->getRigidBody().setPosition(vector2d(50, 500));
   body3->getRigidBody().setMass(100000);
   body3->getRigidBody().setPosition(vector2d(500, 500));
   body3->getRigidBody().setRotation(0.05);
