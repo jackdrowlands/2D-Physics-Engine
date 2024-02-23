@@ -1,18 +1,19 @@
 #include "../include/physicsSystem.hpp"
 
+// Constructor that initializes physicsSystem with given fixedDeltaTime and
+// gravity
 physicsSystem::physicsSystem(double fixedDeltaTime, vector2d gravity)
     : gravityForce(gravity), fixedDeltaTime(fixedDeltaTime) {}
 
-physicsSystem::~physicsSystem() {
-  for (auto body : rigidBodies) {
-    delete body;
-  }
-}
+// Destructor
+physicsSystem::~physicsSystem() {}
 
+// Function to update the physics system
 void physicsSystem::update(double dt) {
-  // TODO:
+  // TODO: Probably not needed anymore.
 }
 
+// Function to update the physics system at fixed intervals
 void physicsSystem::fixedUpdate() {
   bodies1.clear();
   bodies2.clear();
@@ -42,9 +43,9 @@ void physicsSystem::fixedUpdate() {
   registry.updateForces(fixedDeltaTime);
 
   // resolve collisions via iterative impulses
-  for (size_t i = 0; i < impulseIterations; i++) {
+  for (int i = 0; i < impulseIterations; i++) {
     for (size_t j = 0; j < manifolds.size(); j++) {
-      for (int k = 0; k < manifolds[j].getContactPoint().size(); k++) {
+      for (size_t k = 0; k < manifolds[j].getContactPoint().size(); k++) {
         applyImpulse(*bodies1[j], *bodies2[j], manifolds[j]);
       }
     }
@@ -56,11 +57,13 @@ void physicsSystem::fixedUpdate() {
   }
 }
 
+// Function to add a rigidBody to the physics system
 void physicsSystem::addRigidBody(rigidBody* body, bool addGravity) {
   rigidBodies.push_back(body);
   if (addGravity) registry.add(body, &gravityForce);
 }
 
+// Function to apply an impulse to two rigidBodies
 void physicsSystem::applyImpulse(rigidBody& a, rigidBody& b,
                                  collisionManifold& m) {
   double invMassA = a.getInverseMass();

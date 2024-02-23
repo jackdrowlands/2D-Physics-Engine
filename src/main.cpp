@@ -5,15 +5,7 @@
 #include "../include/primitives/circle.hpp"
 #include "../include/render/renderer.hpp"
 
-int main() {
-  // Renderer
-  renderer renderer(1000, 1000);
-
-  // Physics
-  physicsSystem physics(1.0 / 60.0, vector2d(0, 9.8));
-
-  std::vector<box*> bodies;
-  // Rigid body
+void createBodies(std::vector<box*>& bodies, physicsSystem& physics) {
   box* body1 = new box(vector2d(10, 900));
   box* body2 = new box(vector2d(10, 900));
   box* body3 = new box(vector2d(800, 10));
@@ -33,12 +25,12 @@ int main() {
   physics.addRigidBody(&body2->getRigidBody(), false);
   physics.addRigidBody(&body3->getRigidBody(), false);
 
-  bodies.push_back(body1);
-  bodies.push_back(body2);
-  bodies.push_back(body3);
+  bodies.emplace_back(body1);
+  bodies.emplace_back(body2);
+  bodies.emplace_back(body3);
+}
 
-  std::vector<circle*> circles;
-  // Rigid body
+void createCircles(std::vector<circle*>& circles, physicsSystem& physics) {
   circle* circle1 = new circle(10);
   circle* circle2 = new circle(10);
 
@@ -52,10 +44,44 @@ int main() {
   physics.addRigidBody(&circle1->getRigidBody(), true);
   physics.addRigidBody(&circle2->getRigidBody(), true);
 
-  circles.push_back(circle1);
-  circles.push_back(circle2);
+  circles.emplace_back(circle1);
+  circles.emplace_back(circle2);
+}
 
-  // Main loop
+void drawBodies(const std::vector<box*>& bodies, renderer& renderer) {
+  for (const auto& body : bodies) {
+    sf::RectangleShape rectangle(
+        sf::Vector2f(body->getSize().x, body->getSize().y));
+    rectangle.setPosition(body->getRigidBody().getPosition().x,
+                          body->getRigidBody().getPosition().y);
+    rectangle.setOrigin(body->getSize().x / 2, body->getSize().y / 2);
+    rectangle.setRotation(body->getRigidBody().getRotation() * 180 / M_PI);
+    rectangle.setFillColor(sf::Color(255, 0, 0));
+    renderer.draw(rectangle);
+  }
+}
+
+void drawCircles(const std::vector<circle*>& circles, renderer& renderer) {
+  for (const auto& body : circles) {
+    sf::CircleShape circle(body->getRadius());
+    circle.setPosition(body->getRigidBody().getPosition().x,
+                       body->getRigidBody().getPosition().y);
+    circle.setOrigin(body->getRadius(), body->getRadius());
+    circle.setFillColor(sf::Color(0, 255, 0));
+    renderer.draw(circle);
+  }
+}
+
+int main() {
+  renderer renderer(1000, 1000);
+  physicsSystem physics(1.0 / 60.0, vector2d(0, 9.8));
+
+  std::vector<box*> bodies;
+  createBodies(bodies, physics);
+
+  std::vector<circle*> circles;
+  createCircles(circles, physics);
+
   while (renderer.isOpen()) {
     sf::Event event;
     while (renderer.pollEvent(event)) {
@@ -65,33 +91,10 @@ int main() {
     }
 
     physics.fixedUpdate();
-
     renderer.clear();
 
-    // Draw all rigid bodies -> box
-    for (auto& body : bodies) {
-      sf::RectangleShape rectangle(
-          sf::Vector2f(body->getSize().x, body->getSize().y));
-      rectangle.setPosition(body->getRigidBody().getPosition().x,
-                            body->getRigidBody().getPosition().y);
-      rectangle.setOrigin(body->getSize().x / 2, body->getSize().y / 2);
-      // radians to degrees
-      rectangle.setRotation(body->getRigidBody().getRotation() * 180 / M_PI);
-      // red
-      rectangle.setFillColor(sf::Color(255, 0, 0));
-      renderer.draw(rectangle);
-    }
-
-    // Draw all rigid bodies -> circle
-    for (auto& body : circles) {
-      sf::CircleShape circle(body->getRadius());
-      circle.setPosition(body->getRigidBody().getPosition().x,
-                         body->getRigidBody().getPosition().y);
-      circle.setOrigin(body->getRadius(), body->getRadius());
-      // green
-      circle.setFillColor(sf::Color(0, 255, 0));
-      renderer.draw(circle);
-    }
+    drawBodies(bodies, renderer);
+    drawCircles(circles, renderer);
 
     renderer.display();
   }

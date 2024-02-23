@@ -1,6 +1,6 @@
 #include "../../include/primitives/collider.hpp"
 
-collider::collider(/* args */) {}
+collider::collider() {}
 
 collider::~collider() {}
 
