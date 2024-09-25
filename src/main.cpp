@@ -5,47 +5,63 @@
 #include "../include/primitives/circle.hpp"
 #include "../include/render/renderer.hpp"
 
+struct BodyConfig {
+  vector2d size;
+  double mass;
+  vector2d position;
+  double rotation;
+  bool affectedByGravity;
+};
+
+struct CircleConfig {
+  double radius;
+  double mass;
+  vector2d position;
+  bool affectedByGravity;
+};
+
 void createBodies(std::vector<box*>& bodies, physicsSystem& physics) {
-  box* body1 = new box(vector2d(10, 900));
-  box* body2 = new box(vector2d(10, 900));
-  box* body3 = new box(vector2d(800, 10));
+  std::vector<BodyConfig> configs = {
+      {vector2d{10, 900}, 100, vector2d{950, 500}, 0.0, false},
+      {vector2d{10, 900}, 100, vector2d{50, 500}, 0.0, false},
+      {vector2d{800, 10}, 100000, vector2d{500, 500}, 0.05, false},
+      {vector2d{10, 10}, 1, vector2d{510, 0}, 0.0, true},
+      {vector2d{10, 10}, 1, vector2d{500, 200}, 0.0, true}};
+  for (const auto& config : configs) {
+    // Create and initialize the box
+    auto body = new box(config.size);
+    body->getRigidBody().setMass(config.mass);
+    body->getRigidBody().setPosition(config.position);
+    body->getRigidBody().setRotation(config.rotation);
 
-  body1->getRigidBody().setMass(100);
-  body1->getRigidBody().setPosition(vector2d(950, 500));
-  body2->getRigidBody().setMass(100);
-  body2->getRigidBody().setPosition(vector2d(50, 500));
-  body3->getRigidBody().setMass(100000);
-  body3->getRigidBody().setPosition(vector2d(500, 500));
-  body3->getRigidBody().setRotation(0.05);
-  body1->getRigidBody().setCollider(body1);
-  body2->getRigidBody().setCollider(body2);
-  body3->getRigidBody().setCollider(body3);
+    // Set the collider to itself or as required
+    body->getRigidBody().setCollider(body);
 
-  physics.addRigidBody(&body1->getRigidBody(), false);
-  physics.addRigidBody(&body2->getRigidBody(), false);
-  physics.addRigidBody(&body3->getRigidBody(), false);
+    // Add the body to the physics system based on gravity flag
+    physics.addRigidBody(&body->getRigidBody(), config.affectedByGravity);
 
-  bodies.emplace_back(body1);
-  bodies.emplace_back(body2);
-  bodies.emplace_back(body3);
+    // Add the body to the bodies vector
+    bodies.emplace_back(std::move(body));
+  }
 }
 
 void createCircles(std::vector<circle*>& circles, physicsSystem& physics) {
-  circle* circle1 = new circle(10);
-  circle* circle2 = new circle(10);
+  std::vector<CircleConfig> configs = {};
+  for (const auto& config : configs) {
+    // Create and initialize the circle
+    auto circle = new class circle(config.radius);
+    circle->getRigidBody().setMass(config.mass);
+    circle->getRigidBody().setPosition(config.position);
 
-  circle1->getRigidBody().setMass(1);
-  circle1->getRigidBody().setPosition(vector2d(510, 0));
-  circle2->getRigidBody().setMass(1);
-  circle2->getRigidBody().setPosition(vector2d(500, 200));
-  circle1->getRigidBody().setCollider(circle1);
-  circle2->getRigidBody().setCollider(circle2);
+    // Set the collider to itself or as required
+    circle->getRigidBody().setCollider(circle);
 
-  physics.addRigidBody(&circle1->getRigidBody(), true);
-  physics.addRigidBody(&circle2->getRigidBody(), true);
+    // Add the body to the physics system based on gravity flag
+    physics.addRigidBody(&circle->getRigidBody(), config.affectedByGravity);
 
-  circles.emplace_back(circle1);
-  circles.emplace_back(circle2);
+    // Add the body to the bodies vector
+    circles.emplace_back(std::move(circle));
+  }
 }
 
 void drawBodies(const std::vector<box*>& bodies, renderer& renderer) {
@@ -80,7 +96,7 @@ int main() {
   createBodies(bodies, physics);
 
   std::vector<circle*> circles;
-  createCircles(circles, physics);
+  // createCircles(circles, physics);
 
   while (renderer.isOpen()) {
     sf::Event event;
@@ -94,7 +110,7 @@ int main() {
     renderer.clear();
 
     drawBodies(bodies, renderer);
-    drawCircles(circles, renderer);
+    // drawCircles(circles, renderer);
 
     renderer.display();
   }

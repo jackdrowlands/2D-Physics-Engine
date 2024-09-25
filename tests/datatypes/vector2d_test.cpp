@@ -125,11 +125,6 @@ TEST(Vector2dTest, UtilityMethods) {
   EXPECT_NEAR(rotated.y, 1, 1e-9);
 }
 
-// Note: This is a basic set of tests. Depending on the requirements,
-// you may need to write more tests to cover all edge cases and ensure
-// the correctness of all methods, especially for methods like `lerp`, `slerp`,
-// and various rotation operations.
-
 // Test lerp
 TEST(Vector2dTest, Lerp) {
   vector2d vec1(1, 1);

@@ -33,3 +33,9 @@
 
 /build
 /.vscode
+/_deps
+/bin
+/CMakeFiles
+*.cmake
+*.txt
+Makefile
