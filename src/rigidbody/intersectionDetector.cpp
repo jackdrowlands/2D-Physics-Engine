@@ -563,3 +563,17 @@ bool intersectionDetector::boxBox(box box1, box box2) {
   // If there is overlap on all axes, the boxes intersect
   return true;
 }
+
+// Function to get the normals (axes) of a box for SAT
+std::vector<vector2d> intersectionDetector::getAxes(box &box) {
+  std::vector<vector2d> axes;
+  std::vector<vector2d> vertices = box.getVertices();
+
+  // Assuming vertices are in order: [0,1,2,3]
+  for (int i = 0; i < 4; i++) {
+    vector2d edge = vertices[(i + 1) % 4] - vertices[i];
+    vector2d normal = edge.perp().normalise();  // Get the normal
+    axes.push_back(normal);
+  }
+  return axes;
+}

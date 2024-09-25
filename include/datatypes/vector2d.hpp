@@ -56,7 +56,6 @@ class vector2d {
   // Friend Functions
   friend vector2d operator*(double scalar, const vector2d& vec);
   friend vector2d operator/(double scalar, const vector2d& vec);
-  friend vector2d operator-(const vector2d& vec);
   friend vector2d abs(const vector2d& vec);
   friend vector2d min(const vector2d& vec1, const vector2d& vec2);
   friend vector2d max(const vector2d& vec1, const vector2d& vec2);

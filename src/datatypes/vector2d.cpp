@@ -171,9 +171,6 @@ vector2d operator*(double scalar, const vector2d& vec) { return vec * scalar; }
 // Overloaded operator/ for scalar division with vector
 vector2d operator/(double scalar, const vector2d& vec) { return vec / scalar; }
 
-// Overloaded operator- for negation of vector
-vector2d operator-(const vector2d& vec) { return vector2d(-vec.x, -vec.y); }
-
 // Function to calculate and return the absolute value of the vector
 vector2d abs(const vector2d& vec) {
   return vector2d(std::fabs(vec.x), std::fabs(vec.y));

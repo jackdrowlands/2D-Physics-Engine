@@ -59,6 +59,8 @@ class intersectionDetector {
   static bool overlapOnAxis(box box1, box box2, vector2d axis);
 
   static bool boxBox(box box1, box box2);
+
+  static std::vector<vector2d> getAxes(box &box);
 };
 
 #endif  // INTERSECTIONDETECTOR_HPP
