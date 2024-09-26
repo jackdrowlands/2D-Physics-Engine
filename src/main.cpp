@@ -25,8 +25,8 @@ void createBodies(std::vector<box*>& bodies, physicsSystem& physics) {
       {vector2d{10, 900}, 100, vector2d{950, 500}, 0.0, false},
       {vector2d{10, 900}, 100, vector2d{50, 500}, 0.0, false},
       {vector2d{800, 10}, 100000, vector2d{500, 500}, 0.05, false},
-      {vector2d{10, 10}, 1, vector2d{510, 0}, 0.0, true},
-      {vector2d{10, 10}, 1, vector2d{500, 200}, 0.0, true}};
+      {vector2d{20, 20}, 1, vector2d{510, 0}, 0.0, true},
+      {vector2d{20, 20}, 1, vector2d{500, 200}, 0.0, true}};
   for (const auto& config : configs) {
     // Create and initialize the box
     auto body = new box(config.size);
@@ -89,8 +89,11 @@ void drawCircles(const std::vector<circle*>& circles, renderer& renderer) {
 }
 
 int main() {
+  double frameRate = 60.0;
+  double physicsRate = 180.0;
+  int tick = 0;
   renderer renderer(1000, 1000);
-  physicsSystem physics(1.0 / 60.0, vector2d(0, 9.8));
+  physicsSystem physics(1.0 / physicsRate, vector2d(0, 9.8));
 
   std::vector<box*> bodies;
   createBodies(bodies, physics);
@@ -98,21 +101,22 @@ int main() {
   std::vector<circle*> circles;
   // createCircles(circles, physics);
 
-  while (renderer.isOpen()) {
+  while (renderer.isOpen() || tick < 10000) {
     sf::Event event;
     while (renderer.pollEvent(event)) {
       if (event.type == sf::Event::Closed) {
         renderer.close();
       }
     }
-
     physics.fixedUpdate();
-    renderer.clear();
+    if (tick % (int)(physicsRate / frameRate) == 0) {
+      renderer.clear();
 
-    drawBodies(bodies, renderer);
-    // drawCircles(circles, renderer);
-
-    renderer.display();
+      drawBodies(bodies, renderer);
+      drawCircles(circles, renderer);
+      renderer.display();
+    }
+    tick++;
   }
 
   return 0;

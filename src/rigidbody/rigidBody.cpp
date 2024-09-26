@@ -138,3 +138,9 @@ void rigidBody::setCentreOfMass(vector2d centreOfMass) {
 
 // Get centre of mass
 vector2d rigidBody::getCentreOfMass() { return position; }
+
+void rigidBody::setQuadtreeIndex(std::vector<int> indices) {
+  quadtreeIndices = indices;
+}
+
+std::vector<int> rigidBody::getQuadtreeIndices() { return quadtreeIndices; }

@@ -21,6 +21,7 @@ class rigidBody {
   vector2d centreOfMass;
 
   double cor = 1.0f;
+  std::vector<int> quadtreeIndices;
 
  public:
   rigidBody();
@@ -54,6 +55,8 @@ class rigidBody {
   double getAngularVelocity();
   void setCentreOfMass(vector2d centreOfMass);
   vector2d getCentreOfMass();
+  void setQuadtreeIndex(std::vector<int> indices);
+  std::vector<int> getQuadtreeIndices();
 };
 
 #endif  // RIGIDBODY_HPP

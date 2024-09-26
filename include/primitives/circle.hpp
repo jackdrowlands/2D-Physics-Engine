@@ -8,7 +8,6 @@
 class circle : public collider {
  private:
   double radius;
-  rigidBody body;
 
  public:
   circle(double radius);
@@ -21,7 +20,7 @@ class circle : public collider {
   void setRadius(double newRadius);
   rigidBody& getRigidBody();
   void setRigidBody(rigidBody body);
-  std::string getType();
+  std::int getType();
 };
 
 #endif  // CIRCLE_HPP

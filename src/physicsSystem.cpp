@@ -3,7 +3,10 @@
 // Constructor that initializes physicsSystem with given fixedDeltaTime and
 // gravity
 physicsSystem::physicsSystem(double fixedDeltaTime, vector2d gravity)
-    : gravityForce(gravity), fixedDeltaTime(fixedDeltaTime) {}
+    : gravityForce(gravity), fixedDeltaTime(fixedDeltaTime) {
+  // make quadtree
+  this->quadtree = collisions::createQuadtree(colliders);
+}
 
 // Destructor
 physicsSystem::~physicsSystem() {}
@@ -13,29 +16,61 @@ void physicsSystem::update(double dt) {
   // TODO: Probably not needed anymore.
 }
 
+// Function for multithreaded collision detection in a quadtree section
+void detectCollisionsInSection(const std::vector<rigidBody*>& section,
+                               std::vector<rigidBody*>& bodies1,
+                               std::vector<rigidBody*>& bodies2,
+                               std::vector<collisionManifold>& manifolds,
+                               std::mutex& manifoldLock) {
+  for (const auto& body : section) {
+    for (const auto& other : section) {
+      if (body != other) {
+        collisionManifold* res = nullptr;
+        if (body->getCollider() != nullptr && other->getCollider() != nullptr &&
+            !body->hasInfiniteMass() && !other->hasInfiniteMass()) {
+          res = collisions::findCollisionFeatures(body->getCollider(),
+                                                  other->getCollider());
+        }
+
+        if (res != nullptr && res->getIsColliding()) {
+          // Lock the mutex before modifying shared resources
+          std::lock_guard<std::mutex> lock(manifoldLock);
+          bodies1.push_back(body);
+          bodies2.push_back(other);
+          manifolds.push_back(*res);
+        }
+      }
+    }
+  }
+}
+
 // Function to update the physics system at fixed intervals
 void physicsSystem::fixedUpdate() {
   bodies1.clear();
   bodies2.clear();
   manifolds.clear();
+  // update octotree
+  collisions::updateQuadtree(quadtree, colliders);
 
-  // find collisions
-  for (size_t i = 0; i < rigidBodies.size(); i++) {
-    for (size_t j = i + 1; j < rigidBodies.size(); j++) {
-      collisionManifold* res = nullptr;
-      if (rigidBodies[i]->getCollider() != nullptr &&
-          rigidBodies[j]->getCollider() != nullptr &&
-          !rigidBodies[i]->hasInfiniteMass() &&
-          !rigidBodies[j]->hasInfiniteMass()) {
-        res = collisions::findCollisionFeatures(rigidBodies[i]->getCollider(),
-                                                rigidBodies[j]->getCollider());
-      }
+  // Vector to store the threads
+  std::vector<std::thread> threads;
+  std::mutex manifoldMutex;
 
-      if (res != nullptr && res->getIsColliding()) {
-        bodies1.push_back(rigidBodies[i]);
-        bodies2.push_back(rigidBodies[j]);
-        manifolds.push_back(*res);
-      }
+  // Process each section of the quadtree in a separate thread
+  for (const auto& section : quadtree) {
+    if (section.size() == 0) {
+      continue;
+    }
+    // Launch a thread to handle collision detection in this section
+    threads.emplace_back(std::thread(
+        detectCollisionsInSection, std::ref(section), std::ref(bodies1),
+        std::ref(bodies2), std::ref(manifolds), std::ref(manifoldMutex)));
+  }
+
+  // Wait for all threads to finish
+  for (auto& thread : threads) {
+    if (thread.joinable()) {
+      thread.join();
     }
   }
 
@@ -52,15 +87,15 @@ void physicsSystem::fixedUpdate() {
   }
 
   // update velocities
-  for (auto& body : rigidBodies) {
-    body->physicsUpdate(fixedDeltaTime);
+  for (auto& collider : colliders) {
+    collider->getRigidBody().physicsUpdate(fixedDeltaTime);
   }
 }
 
 // Function to add a rigidBody to the physics system
-void physicsSystem::addRigidBody(rigidBody* body, bool addGravity) {
-  rigidBodies.push_back(body);
-  if (addGravity) registry.add(body, &gravityForce);
+void physicsSystem::addCollider(collider* collider, bool addGravity) {
+  colliders.push_back(collider);
+  if (addGravity) registry.add(collider->getRigidBody(), &gravityForce);
 }
 
 // Function to apply an impulse to two rigidBodies

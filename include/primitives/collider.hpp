@@ -9,11 +9,14 @@ class collider {
   /* data */
  protected:
   vector2d offset;
+  rigidBody body;
 
  public:
   collider(/* args */);
   ~collider();
-  virtual std::string getType() = 0;
+  virtual int getType() = 0;
+  virtual void setRigidBody(rigidBody* body);
+  virtual rigidBody& getRigidBody();
 };
 
 #endif  // COLLIDER_HPP

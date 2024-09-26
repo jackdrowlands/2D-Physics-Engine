@@ -11,7 +11,6 @@
 class box : public collider {
  private:
   vector2d size;
-  rigidBody body;
 
  public:
   box();

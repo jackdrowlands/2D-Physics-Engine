@@ -250,3 +250,56 @@ collisionManifold* collisions::findCollisionFeatures(collider* c1,
             << c2->getType() << std::endl;
   return nullptr;
 }
+
+// Function to create an quadtree from a list of rigidBodies
+
+std::vector<std::vector<rigidBody*>> collisions::createQuadtree(
+    std::vector<collider*>& colliders, const int amountOfQuadsSQRT) {
+  // Create the quadtree
+  std::vector<std::vector<rigidBody*>> quadtree(
+      amountOfQuadsSQRT * amountOfQuadsSQRT + 1);
+
+  // Add the rigidBodies to the quadtree
+  for (auto& body : rigidBodies) {
+    if (body->getQuadtreeIndices().empty()) {
+      continue;
+    }
+    vector2d position = body->getPosition();
+    int x = (int)((position.x + 10000) / (20000 / amountOfQuadsSQRT));
+    int y = (int)((position.y + 10000) / (20000 / amountOfQuadsSQRT));
+
+    int index = x + (y * amountOfQuadsSQRT);
+    quadtree[index].push_back(body);
+    body->setPosInQuadtree(index);
+  }
+  return quadtree;
+}
+
+// Function to update the quadtree
+void collisions::updateQuadtree(std::vector<std::vector<rigidBody*>>& quadtree,
+                                std::vector<rigidBody*>& rigidBodies,
+                                const int amountOfQuadsSQRT) {
+  // only update the quadtree if the velocity of the rigidBody is greater than
+  // 0
+  for (auto& body : rigidBodies) {
+    if (body->getQuadtreeIndices().empty() ||
+        body->getLinearVelocity().magnitude() > 0) {
+      int oldIndex = body->getPosInQuadtree();
+      vector2d position = body->getPosition();
+      int x = (int)((position.x + 10000) / (20000 / amountOfQuadsSQRT));
+      int y = (int)((position.y + 10000) / (20000 / amountOfQuadsSQRT));
+
+      int index = x + (y * amountOfQuadsSQRT);
+      if (index != oldIndex) {
+        auto it = std::find(quadtree[oldIndex].begin(),
+                            quadtree[oldIndex].end(), body);
+        if (it != quadtree[oldIndex].end()) {
+          std::swap(*it, quadtree[oldIndex].back());
+          quadtree[oldIndex].pop_back();
+        }
+        quadtree[index].push_back(body);
+        body->setPosInQuadtree(index);
+      }
+    }
+  }
+}
